@@ -30,12 +30,98 @@ app.get("/posts", async function (req, res) {
         { $limit: 20 },
       ])
       .toArray();
-    return res.json(data);
+    const formatUser = data.map((post) => {
+      post.user = post.user[0];
+      delete post.user.password;
+      return post;
+    });
+    return res.json(formatUser);
   } catch (err) {
     return res.sendStatus(500);
   }
 });
+//post in profile
+app.get("/users/:handle", async function (req, res) {
+  const { handle } = req.params;
+  const user = await xusers.findOne({ handle });
+  try {
+    const data = await xposts
+      .aggregate([
+        { $match: { owner: user._id } },
+        {
+          $lookup: {
+            localField: "owner",
+            from: "users",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        { $limit: 20 },
+      ])
+      .toArray();
 
+    const formatUser = data.map((post) => {
+      post.user = post.user[0];
+      delete post.user.password;
+      return post;
+    });
+    return res.json(formatUser);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
+//
+//singlePost
+app.get("/posts/:id", async function (req, res) {
+  const { id } = req.params;
+  try {
+    const data = await xposts
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        {
+          $lookup: {
+            localField: "owner",
+            from: "users",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+
+        {
+          $lookup: {
+            localField: "_id",
+            from: "posts",
+            foreignField: "origin",
+            as: "comments",
+            pipeline: [
+              {
+                $lookup: {
+                  from: "users",
+                  localField: "owner",
+                  foreignField: "_id",
+                  as: "user",
+                },
+              },
+            ],
+          },
+        },
+        { $limit: 20 },
+      ])
+      .toArray();
+    const format = data[0];
+    format.user = format.user[0];
+    delete format.user.password;
+    if (format.comments.length) {
+      format.comments = format.comments.map((comment) => {
+        comment.user = comment.user[0];
+        return comment;
+      });
+    }
+    return res.json(format);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
 app.listen(8888, () => {
   console.log("X api running at 8888");
 });
