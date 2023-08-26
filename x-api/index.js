@@ -7,6 +7,9 @@ app.use(cors());
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const secret = "hahaha";
 
 const { MongoClient, ObjectId } = require("mongodb");
 const mongo = new MongoClient("mongodb://127.0.0.1");
@@ -14,8 +17,60 @@ const mongo = new MongoClient("mongodb://127.0.0.1");
 const xdb = mongo.db("x");
 const xposts = xdb.collection("posts");
 const xusers = xdb.collection("users");
+const auth = (req, res, next) => {
+  const { authorization } = req.headers;
+  const token = authorization && authorization.split(" ")[1];
+  if (!token) {
+    return res.status(400).json({ msg: "Token require" });
+  }
+  jwt.verify(token, secret, (err, user) => {
+    if (err) {
+      return res.status(400).json({ msg: "Token is not Valid" });
+    }
+    res.locals.user = user;
+    next();
+  });
+};
 
-app.get("/posts", async function (req, res) {
+app.get("/login", async (req, res) => {
+  console.log("login");
+  const { handle, password } = req.body;
+  if (!handle || !password) {
+    return res.status(400).json({ msg: "handle and password required" });
+  }
+  const user = await xusers.findOne({ handle });
+  if (user) {
+    const result = await bcrypt.compare(password, user.password);
+    if (result) {
+      const token = jwt.sign(user, secret);
+      return res.json({ token });
+    }
+    return res.status(400).json({ msg: "password is not valid" });
+  }
+  return res.send(500);
+});
+
+app.post("/users", async (req, res) => {
+  const { name, handle, password, profile } = req.body;
+  if (!name || !handle || !password) {
+    return res.status(400).json({ msg: "require: name , password, handle" });
+  }
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    const result = await xusers.insertOne({
+      name,
+      handle,
+      profile,
+      password: hash,
+    });
+    return res
+      .status(200)
+      .json({ _id: result.insertedId, name, handle, profile });
+  } catch {
+    return res.status(500);
+  }
+});
+app.get("/posts", auth, async function (req, res) {
   try {
     const data = await xposts
       .aggregate([
@@ -35,6 +90,7 @@ app.get("/posts", async function (req, res) {
       delete post.user.password;
       return post;
     });
+    //this formatUser contain post-body,like,and formatUser
     return res.json(formatUser);
   } catch (err) {
     return res.sendStatus(500);

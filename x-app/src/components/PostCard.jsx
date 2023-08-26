@@ -18,10 +18,14 @@ const Post = ({ post, primary }) => {
   return (
     <>
       <Card
-        sx={{ mb: 1, bgcolor: primary ? "#def" : "transparent" }}
+        sx={{
+          mb: 1,
+          bgcolor: primary ? "skyblue" : "transparent",
+        }}
         variant="outlined"
       >
         <CardActionArea onClick={() => singlePost(post._id)}>
+          {/* comment.jsx */}
           <CardContent sx={{ display: "flex", p: 2 }}>
             <Box sx={{ mr: 3 }}>
               <Avatar
