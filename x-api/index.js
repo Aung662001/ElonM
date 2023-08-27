@@ -19,6 +19,7 @@ const xposts = xdb.collection("posts");
 const xusers = xdb.collection("users");
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
+  console.log(req.headers, "header");
   const token = authorization && authorization.split(" ")[1];
   if (!token) {
     return res.status(400).json({ msg: "Token require" });
@@ -32,22 +33,23 @@ const auth = (req, res, next) => {
   });
 };
 
-app.get("/login", async (req, res) => {
+app.post("/login", async (req, res) => {
   console.log("login");
   const { handle, password } = req.body;
   if (!handle || !password) {
     return res.status(400).json({ msg: "handle and password required" });
   }
   const user = await xusers.findOne({ handle });
+  console.log(handle, user);
   if (user) {
     const result = await bcrypt.compare(password, user.password);
     if (result) {
       const token = jwt.sign(user, secret);
-      return res.json({ token });
+      return res.json({ token, user });
     }
     return res.status(400).json({ msg: "password is not valid" });
   }
-  return res.send(500);
+  return res.sendStatus(500);
 });
 
 app.post("/users", async (req, res) => {

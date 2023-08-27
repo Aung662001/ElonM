@@ -5,10 +5,15 @@ import {
   Box,
   Typography,
   Avatar,
+  Button,
+  ButtonGroup,
+  IconButton,
 } from "@mui/material";
 import { pink, blue, blueGrey } from "@mui/material/colors";
 import { formatRelative, parseISO, formatDistance } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import MessageIcon from "@mui/icons-material/Message";
 
 const Post = ({ post, primary }) => {
   const navigate = useNavigate();
@@ -66,6 +71,25 @@ const Post = ({ post, primary }) => {
             </Box>
           </CardContent>
         </CardActionArea>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+          }}
+        >
+          <ButtonGroup>
+            <IconButton>
+              <FavoriteBorderIcon color="error" />
+            </IconButton>
+            <Button variant="text">{post.likes && post.likes.length}</Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <IconButton>
+              <MessageIcon color="success" />
+            </IconButton>
+            <Button variant="text">{0}</Button>
+          </ButtonGroup>
+        </Box>
       </Card>
     </>
   );

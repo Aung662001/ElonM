@@ -7,6 +7,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 import {
@@ -22,8 +23,8 @@ import { AuthContext } from "../ThemedApp";
 
 export default function MainDrawer({ showDrawer, toggleDrawer }) {
   const navigate = useNavigate();
-  const { auth, setAuth } = useContext(AuthContext);
-
+  const { auth, setAuth, setAuthUser, authUser } = useContext(AuthContext);
+  console.log(authUser, auth);
   console.log(auth);
   return (
     <div>
@@ -46,8 +47,18 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                 background: "#59f",
               }}
             >
-              A
+              {auth ? authUser.name : "U"}
             </Avatar>
+            {auth && (
+              <>
+                <Typography variant="p" sx={{ ml: 3, mt: 3 }}>
+                  {authUser.name}
+                </Typography>
+                <Typography variant="p" sx={{ ml: 1, mt: 3, color: "gray" }}>
+                  @{authUser.handle}
+                </Typography>
+              </>
+            )}
           </Box>
 
           <List sx={{ mt: 10 }}>
@@ -56,7 +67,7 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                 <ListItem>
                   <ListItemButton
                     onClick={() => {
-                      // navigate("/profile/alice");
+                      navigate(`/profile/${authUser.handle}`);
                       toggleDrawer();
                     }}
                   >

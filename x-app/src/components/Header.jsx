@@ -17,13 +17,14 @@ import {
 } from "@mui/icons-material";
 
 import { useContext, useState } from "react";
-import { ThemeContext } from "../ThemedApp";
-import { Link } from "react-router-dom";
+import { AuthContext, ThemeContext } from "../ThemedApp";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header({ toggleDrawer }) {
+  const navigate = useNavigate();
   const { mode, setMode } = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false);
-
+  const { setAuth, setAuthUser, auth } = useContext(AuthContext);
   return (
     <Box sx={{ flexGrow: 1, mb: 3 }}>
       <AppBar position="static">
@@ -51,9 +52,11 @@ export default function Header({ toggleDrawer }) {
             </IconButton>
           )}
 
-          <IconButton onClick={(e) => setShowMenu(e.currentTarget)}>
-            <MoreVertIcon />
-          </IconButton>
+          {auth && (
+            <IconButton onClick={(e) => setShowMenu(e.currentTarget)}>
+              <MoreVertIcon />
+            </IconButton>
+          )}
 
           <Menu
             anchorEl={showMenu}
@@ -63,6 +66,10 @@ export default function Header({ toggleDrawer }) {
             <MenuItem
               onClick={() => {
                 setShowMenu(false);
+                setAuth(false);
+                setAuthUser({});
+                navigate("/login");
+                localStorage.removeItem("token");
               }}
               sx={{ width: 200 }}
             >
