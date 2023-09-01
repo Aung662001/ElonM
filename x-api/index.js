@@ -19,13 +19,14 @@ const xposts = xdb.collection("posts");
 const xusers = xdb.collection("users");
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(req.headers, "header");
+  // console.log(req.headers, "header");
   const token = authorization && authorization.split(" ")[1];
   if (!token) {
     return res.status(400).json({ msg: "Token require" });
   }
   jwt.verify(token, secret, (err, user) => {
     if (err) {
+      console.log(err);
       return res.status(400).json({ msg: "Token is not Valid" });
     }
     res.locals.user = user;
@@ -34,13 +35,11 @@ const auth = (req, res, next) => {
 };
 
 app.post("/login", async (req, res) => {
-  console.log("login");
   const { handle, password } = req.body;
   if (!handle || !password) {
     return res.status(400).json({ msg: "handle and password required" });
   }
-  const user = await xusers.findOne({ handle });
-  console.log(handle, user);
+  const user = await xusers.findOne({ handle: handle.trim() });
   if (user) {
     const result = await bcrypt.compare(password, user.password);
     if (result) {
@@ -144,6 +143,14 @@ app.get("/posts/:id", async function (req, res) {
             as: "user",
           },
         },
+        {
+          $lookup: {
+            from: "users",
+            localField: "likes",
+            foreignField: "_id",
+            as: "liked_users",
+          },
+        },
 
         {
           $lookup: {
@@ -180,6 +187,49 @@ app.get("/posts/:id", async function (req, res) {
     return res.sendStatus(500);
   }
 });
+//posts
+app.get("/verify", auth, function (req, res, next) {
+  res.json(res.locals.user);
+});
+
+app.get("/users/:handle", async function (req, res) {
+  const { handle } = req.params;
+
+  try {
+    const user = await xusers.findOne({ handle });
+
+    const data = await xposts
+      .aggregate([
+        {
+          $match: { owner: user._id },
+        },
+        {
+          $lookup: {
+            localField: "owner",
+            from: "users",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $limit: 20,
+        },
+      ])
+      .toArray();
+
+    const format = data.map((post) => {
+      post.user = post.user[0];
+      delete post.user.password;
+
+      return post;
+    });
+
+    return res.json(format);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
 app.listen(8888, () => {
   console.log("X api running at 8888");
 });
+//"/handle/: "

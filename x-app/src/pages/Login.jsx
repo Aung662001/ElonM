@@ -10,6 +10,7 @@ import {
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../ThemedApp";
+import { fetchLogin } from "../libs/fetcher";
 const url = "http://localhost:8888/login";
 export default function Login() {
   const navigate = useNavigate();
@@ -46,15 +47,11 @@ export default function Login() {
                 "Content-Type": "application/json",
               },
             });
-            if (res.ok) {
-              const { token, user } = await res.json();
-              localStorage.setItem("token", JSON.stringify(token));
-              setAuth(true);
-              setAuthUser(user);
-              navigate("/");
-            } else {
-              setHasError(true);
-            }
+            const user = await fetchLogin();
+            if (!user) return setHasError(true);
+            setAuth(true);
+            setAuthUser(user);
+            navigate("/");
           })();
         }}
       >

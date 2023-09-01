@@ -81,7 +81,14 @@ const Post = ({ post, primary }) => {
             <IconButton>
               <FavoriteBorderIcon color="error" />
             </IconButton>
-            <Button variant="text">{post.likes && post.likes.length}</Button>
+            <Button
+              variant="text"
+              onClick={() => {
+                navigate(`/likes/${post._id}`);
+              }}
+            >
+              {post.likes && post.likes.length}
+            </Button>
           </ButtonGroup>
           <ButtonGroup>
             <IconButton>

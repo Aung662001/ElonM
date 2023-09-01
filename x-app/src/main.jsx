@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Comment from "./pages/Comment";
+import Likes from "./pages/Likes";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/comment/:id",
         element: <Comment />,
+      },
+      {
+        path: "/likes/:id",
+        element: <Likes />,
       },
     ],
   },
