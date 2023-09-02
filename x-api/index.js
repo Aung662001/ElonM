@@ -84,6 +84,14 @@ app.get("/posts", auth, async function (req, res) {
             as: "user",
           },
         },
+        {
+          $lookup: {
+            localField: "_id",
+            foreignField: "origin",
+            from: "posts",
+            as: "comments",
+          },
+        },
         { $limit: 20 },
       ])
       .toArray();
@@ -114,10 +122,10 @@ app.get("/users/:handle", async function (req, res) {
             as: "user",
           },
         },
+
         { $limit: 20 },
       ])
       .toArray();
-
     const formatUser = data.map((post) => {
       post.user = post.user[0];
       delete post.user.password;
@@ -254,4 +262,40 @@ app.put("/posts/:id/like", auth, async (req, res) => {
   const result = await xposts.updateOne({ _id }, { $set: post });
 
   res.json(result);
+});
+//get comments of a post
+app.get("/posts/:id/comments", async (req, res) => {
+  const { id } = req.params;
+  const _id = new ObjectId(id);
+  const post = await xposts.findOne(_id);
+
+  if (!post) return res.sendStatus(400);
+
+  try {
+    const comments = await xposts
+      .aggregate([
+        {
+          $match: {
+            origin: _id,
+          },
+        },
+        {
+          $lookup: {
+            localField: "owner",
+            from: "users",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+      ])
+      .toArray();
+    const format = comments.map((comment) => {
+      comment.user = comment.user[0];
+      delete comment.user.password;
+      return comment;
+    });
+    res.json(format);
+  } catch {
+    res.status(500);
+  }
 });

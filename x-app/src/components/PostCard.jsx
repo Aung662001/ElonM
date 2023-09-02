@@ -18,19 +18,19 @@ import MessageIcon from "@mui/icons-material/Message";
 import { useContext } from "react";
 import { AuthContext } from "../ThemedApp";
 
-const Post = ({ post, primary, LikeClick }) => {
+const Post = ({ post, primary }) => {
   const navigate = useNavigate();
   const singlePost = (id) => {
     navigate(`/comment/${id}`);
   };
-  const { authUser } = useContext(AuthContext);
+  const { authUser, LikeClick } = useContext(AuthContext);
 
   return (
     <>
       <Card
         sx={{
           mb: 1,
-          bgcolor: primary ? "skyblue" : "transparent",
+          bgcolor: primary ? "#183D3D" : "transparent",
         }}
         variant="outlined"
       >
@@ -50,6 +50,7 @@ const Post = ({ post, primary, LikeClick }) => {
                 {post.user.name.charAt(0)}
               </Avatar>
             </Box>
+
             <Box>
               <Box sx={{ mb: 1 }}>
                 <Typography sx={{ mr: 1 }} component="span">
@@ -103,7 +104,12 @@ const Post = ({ post, primary, LikeClick }) => {
             <IconButton>
               <MessageIcon color="success" />
             </IconButton>
-            <Button variant="text">{0}</Button>
+            <Button
+              variant="text"
+              onClick={() => navigate(`/posts/${post._id}/comments`)}
+            >
+              {post.comments?.length ? post.comments.length : "0"}
+            </Button>
           </ButtonGroup>
         </Box>
       </Card>

@@ -23,7 +23,7 @@ export default function Comment() {
         <Box>
           <Post post={post} key={post._id} primary={true} />
 
-          {post.comments.length &&
+          {post.comments.length != 0 &&
             post.comments.map((comment) => {
               return <Post post={comment} key={comment._id} />;
             })}

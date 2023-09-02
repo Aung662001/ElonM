@@ -24,8 +24,6 @@ import { AuthContext } from "../ThemedApp";
 export default function MainDrawer({ showDrawer, toggleDrawer }) {
   const navigate = useNavigate();
   const { auth, setAuth, setAuthUser, authUser } = useContext(AuthContext);
-  console.log(authUser, auth);
-  console.log(auth);
   return (
     <div>
       <Drawer anchor="left" open={showDrawer} onClose={toggleDrawer}>

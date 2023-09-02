@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Comment from "./pages/Comment";
 import Likes from "./pages/Likes";
+import Comments from "./pages/Comments";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,12 +39,14 @@ const router = createBrowserRouter([
         path: "/likes/:id",
         element: <Likes />,
       },
+      {
+        path: "/posts/:id/comments",
+        element: <Comments />,
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <RouterProvider router={router} />
 );

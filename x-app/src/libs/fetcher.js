@@ -100,3 +100,13 @@ export async function fetchToggleLike(id) {
   }
   return res.ok;
 }
+
+export async function fetchAllComments(id) {
+  const res = await fetch(`${api}/posts/${id}/comments`, {
+    method: "get",
+  });
+  if (!res.ok) {
+    return;
+  }
+  return res.json();
+}

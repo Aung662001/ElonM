@@ -3,22 +3,53 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { grey, pink } from "@mui/material/colors";
 import App from "./App";
-import { fetchVerify } from "./libs/fetcher";
-
+import { fetchPosts, fetchToggleLike, fetchVerify } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
+
 export default function ThemedApp() {
   const [mode, setMode] = useState("dark");
   const [auth, setAuth] = useState(false);
   const [authUser, setAuthUser] = useState({});
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  //like and unlike
+  function LikeClick(_id) {
+    fetchToggleLike(_id);
+    setPosts(
+      posts.map((post) => {
+        if (post._id == _id) {
+          if (post.likes.includes(authUser._id)) {
+            post.likes = post.likes.filter((like) => like !== authUser._id);
+            console.log(post.likes);
+          } else {
+            post.likes.push(authUser._id);
+          }
+        }
+        return post;
+      })
+    );
+  }
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const user = await fetchVerify();
       if (user) {
+        setLoading(false);
         setAuth(true);
         setAuthUser(user);
       }
+    })();
+    (async () => {
+      setLoading(true);
+      const posts = await fetchPosts();
+      if (!posts) {
+        return navigate("/login");
+      }
+
+      setPosts(posts);
+      setLoading(false);
     })();
   }, []);
 
@@ -54,7 +85,18 @@ export default function ThemedApp() {
   }, [mode]);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, authUser, setAuthUser }}>
+    <AuthContext.Provider
+      value={{
+        auth,
+        setAuth,
+        authUser,
+        setAuthUser,
+        LikeClick,
+        posts,
+        setPosts,
+        loading,
+      }}
+    >
       <ThemeContext.Provider value={{ mode, setMode }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
