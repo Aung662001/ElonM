@@ -16,7 +16,7 @@ import {
   Person2 as PersonIcon,
   PersonAddAlt as PersonAddAltIcon,
 } from "@mui/icons-material";
-
+import { pink } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../ThemedApp";
@@ -33,7 +33,6 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
           <Box
             sx={{
               height: 180,
-              background: "#345",
               display: "flex",
               alignItems: "end",
             }}
@@ -44,7 +43,8 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                 height: 98,
                 ml: 3,
                 mb: -5,
-                background: "#59f",
+                bgcolor: pink[500],
+                // background: "#59f",
               }}
             >
               {auth ? authUser.name : "U"}

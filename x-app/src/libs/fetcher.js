@@ -86,3 +86,17 @@ export async function fetchLikes(id) {
   const post = await res.json();
   return post.liked_users || [];
 }
+
+export async function fetchToggleLike(id) {
+  const token = getToken();
+  const res = await fetch(`${api}/posts/${id}/like`, {
+    method: "put",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    return;
+  }
+  return res.ok;
+}

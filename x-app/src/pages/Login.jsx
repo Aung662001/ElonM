@@ -47,7 +47,7 @@ export default function Login() {
                 "Content-Type": "application/json",
               },
             });
-            const user = await fetchLogin();
+            const user = await fetchLogin(handle, password);
             if (!user) return setHasError(true);
             setAuth(true);
             setAuthUser(user);

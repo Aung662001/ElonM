@@ -36,6 +36,7 @@ const auth = (req, res, next) => {
 
 app.post("/login", async (req, res) => {
   const { handle, password } = req.body;
+  console.log(handle, password);
   if (!handle || !password) {
     return res.status(400).json({ msg: "handle and password required" });
   }
@@ -232,4 +233,25 @@ app.get("/users/:handle", async function (req, res) {
 app.listen(8888, () => {
   console.log("X api running at 8888");
 });
-//"/handle/: "
+
+app.put("/posts/:id/like", auth, async (req, res) => {
+  const { id } = req.params;
+  const { user } = res.locals;
+
+  const _id = new ObjectId(id);
+  const user_id = new ObjectId(user._id);
+
+  const post = await xposts.findOne({ _id });
+  if (!post) return res.send(400);
+
+  if (post.likes.find((like) => like.toString() == user_id.toString())) {
+    post.likes = post.likes.filter(
+      (like) => like.toString() !== user_id.toString()
+    );
+  } else {
+    post.likes.push(user_id);
+  }
+  const result = await xposts.updateOne({ _id }, { $set: post });
+
+  res.json(result);
+});

@@ -14,24 +14,44 @@ import {
   MoreVert as MoreVertIcon,
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon,
+  ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
-
 import { useContext, useState } from "react";
 import { AuthContext, ThemeContext } from "../ThemedApp";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Header({ toggleDrawer }) {
+  const mainPages = ["/", "/login", "/register"];
   const navigate = useNavigate();
   const { mode, setMode } = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false);
   const { setAuth, setAuthUser, auth } = useContext(AuthContext);
   return (
     <Box sx={{ flexGrow: 1, mb: 3 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ bgcolor: "appbar.background" }}>
         <Toolbar>
-          <IconButton onClick={toggleDrawer}>
-            <MenuIcon />
-          </IconButton>
+          {mainPages.includes(location.pathname) ? (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              sx={{ mr: 2 }}
+              onClick={toggleDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          )}
 
           <Box
             sx={{

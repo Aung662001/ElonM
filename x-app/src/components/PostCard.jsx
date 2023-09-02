@@ -13,13 +13,18 @@ import { pink, blue, blueGrey } from "@mui/material/colors";
 import { formatRelative, parseISO, formatDistance } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Favorite as LikedIcon } from "@mui/icons-material";
 import MessageIcon from "@mui/icons-material/Message";
+import { useContext } from "react";
+import { AuthContext } from "../ThemedApp";
 
-const Post = ({ post, primary }) => {
+const Post = ({ post, primary, LikeClick }) => {
   const navigate = useNavigate();
   const singlePost = (id) => {
     navigate(`/comment/${id}`);
   };
+  const { authUser } = useContext(AuthContext);
+
   return (
     <>
       <Card
@@ -78,8 +83,12 @@ const Post = ({ post, primary }) => {
           }}
         >
           <ButtonGroup>
-            <IconButton>
-              <FavoriteBorderIcon color="error" />
+            <IconButton onClick={(e) => LikeClick(post._id)}>
+              {post.likes.includes(authUser._id) ? (
+                <LikedIcon />
+              ) : (
+                <FavoriteBorderIcon color="error" />
+              )}
             </IconButton>
             <Button
               variant="text"
