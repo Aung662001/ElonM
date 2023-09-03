@@ -11,6 +11,7 @@ import Comment from "./pages/Comment";
 import Likes from "./pages/Likes";
 import Comments from "./pages/Comments";
 import Following from "./pages/Following";
+import NewComment from "./pages/NewComment";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/follower/:handle",
         element: <Following />,
+      },
+      {
+        path: "/comment/new",
+        element: <NewComment />,
       },
     ],
   },

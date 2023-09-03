@@ -1,16 +1,4 @@
 import {
-  Box,
-  Drawer,
-  Avatar,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
-
-import {
   Home as HomeIcon,
   Login as LoginIcon,
   Person2 as PersonIcon,
@@ -20,6 +8,17 @@ import { pink } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../ThemedApp";
+import {
+  Drawer,
+  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Box,
+} from "@mui/material";
 
 export default function MainDrawer({ showDrawer, toggleDrawer }) {
   const navigate = useNavigate();

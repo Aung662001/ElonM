@@ -349,3 +349,19 @@ app.get("/user/:handle/follower", async (req, res) => {
     res.send(500);
   }
 });
+app.post("new/post", async (req, res) => {
+  const { content, type, owner } = req.body;
+
+  if (!content) return res.sendStatus(400);
+  const data = {
+    type,
+    body: content,
+    owner: owner,
+  };
+  try {
+    const result = await xposts.insertOne(data);
+    res.json(result);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});

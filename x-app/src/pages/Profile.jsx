@@ -74,7 +74,9 @@ export default function Profile() {
               gap: 4,
             }}
           >
-            <Button onClick={followingClick}>Following</Button>
+            <Button onClick={followingClick}>
+              {posts[0].user.following?.length} Following
+            </Button>
             <Button onClick={followerClick}>follower</Button>
           </Box>
           {posts.map((post) => {

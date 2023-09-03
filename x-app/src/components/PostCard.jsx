@@ -92,7 +92,7 @@ const Post = ({ post, primary, LikeClick }) => {
               }}
             >
               {post.likes.includes(authUser._id) ? (
-                <LikedIcon />
+                <LikedIcon sx={{ color: pink[500] }} />
               ) : (
                 <FavoriteBorderIcon color="error" />
               )}

@@ -7,7 +7,7 @@ import { AuthContext } from "../ThemedApp";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { authUser, posts, loading } = useContext(AuthContext);
+  const { authUser, posts, loading, setPosts } = useContext(AuthContext);
   function LikeClick(_id) {
     setPosts(
       posts.map((post) => {

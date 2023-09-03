@@ -1,15 +1,4 @@
 import {
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-  Badge,
-  IconButton,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-
-import {
   Menu as MenuIcon,
   MoreVert as MoreVertIcon,
   LightMode as LightModeIcon,
@@ -19,6 +8,16 @@ import {
 import { useContext, useState } from "react";
 import { AuthContext, ThemeContext } from "../ThemedApp";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Badge,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 
 export default function Header({ toggleDrawer }) {
   const mainPages = ["/", "/login", "/register"];

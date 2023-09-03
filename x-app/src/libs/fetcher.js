@@ -1,3 +1,5 @@
+import { application } from "express";
+
 const api = "http://localhost:8888";
 
 export function getToken() {
@@ -117,4 +119,14 @@ export async function fetchFollowing(handle) {
     return;
   }
   return res.json();
+}
+
+export async function addNewComment(type, content, userId) {
+  const res = await fetch(`${api}/new/post`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content, type, userId }),
+  });
 }
