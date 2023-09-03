@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import Comment from "./pages/Comment";
 import Likes from "./pages/Likes";
 import Comments from "./pages/Comments";
+import Following from "./pages/Following";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
       {
         path: "/posts/:id/comments",
         element: <Comments />,
+      },
+      {
+        path: "/following/:handle",
+        element: <Following />,
+      },
+      {
+        path: "/follower/:handle",
+        element: <Following />,
       },
     ],
   },

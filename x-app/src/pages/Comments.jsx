@@ -6,28 +6,34 @@ import { AuthContext } from "../ThemedApp";
 
 const Comments = () => {
   const { id } = useParams(); //single post id
-  const { posts, loading, setPosts } = useContext(AuthContext);
+  const { loading, authUser } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
-  let data;
   useEffect(() => {
     (async () => {
-      data = await fetchAllComments(id);
-      setComments(data.map((data) => data._id));
-      setPosts((posts) => [...posts, ...data]);
+      let data = await fetchAllComments(id);
+      setComments(data);
     })();
-  }, [id]);
-  if (!posts || !comments) {
-    return "loading";
+  }, []);
+  function LikeClick(_id) {
+    setComments(
+      comments.map((comment) => {
+        if (comment._id == _id) {
+          if (comment.likes.includes(authUser._id)) {
+            comment.likes = comment.likes.filter(
+              (like) => like !== authUser._id
+            );
+          } else {
+            comment.likes.push(authUser._id);
+          }
+        }
+        return comment;
+      })
+    );
   }
   return (
     <>
-      {posts.map((post) => {
-        console.log(posts);
-        if (comments?.includes(post._id)) {
-          return <Post post={post} key={post._id} />;
-        } else {
-          ("No Comments Yet");
-        }
+      {comments.map((comment) => {
+        return <Post post={comment} key={comment._id} LikeClick={LikeClick} />;
       })}
     </>
   );

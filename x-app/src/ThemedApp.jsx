@@ -3,7 +3,7 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { grey, pink } from "@mui/material/colors";
 import App from "./App";
-import { fetchPosts, fetchToggleLike, fetchVerify } from "./libs/fetcher";
+import { fetchPosts, fetchVerify } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
 
@@ -15,7 +15,6 @@ export default function ThemedApp() {
   const [loading, setLoading] = useState(false);
   //like and unlike
   function LikeClick(_id) {
-    fetchToggleLike(_id);
     setPosts(
       posts.map((post) => {
         if (post._id == _id) {
@@ -30,7 +29,6 @@ export default function ThemedApp() {
       })
     );
   }
-
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -91,10 +89,10 @@ export default function ThemedApp() {
         setAuth,
         authUser,
         setAuthUser,
-        LikeClick,
         posts,
         setPosts,
         loading,
+        LikeClick,
       }}
     >
       <ThemeContext.Provider value={{ mode, setMode }}>

@@ -17,13 +17,14 @@ import { Favorite as LikedIcon } from "@mui/icons-material";
 import MessageIcon from "@mui/icons-material/Message";
 import { useContext } from "react";
 import { AuthContext } from "../ThemedApp";
+import { fetchToggleLike } from "../libs/fetcher";
 
-const Post = ({ post, primary }) => {
+const Post = ({ post, primary, LikeClick }) => {
   const navigate = useNavigate();
   const singlePost = (id) => {
     navigate(`/comment/${id}`);
   };
-  const { authUser, LikeClick } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   return (
     <>
@@ -84,7 +85,12 @@ const Post = ({ post, primary }) => {
           }}
         >
           <ButtonGroup>
-            <IconButton onClick={(e) => LikeClick(post._id)}>
+            <IconButton
+              onClick={(e) => {
+                LikeClick(post._id);
+                fetchToggleLike(post._id);
+              }}
+            >
               {post.likes.includes(authUser._id) ? (
                 <LikedIcon />
               ) : (
@@ -106,7 +112,9 @@ const Post = ({ post, primary }) => {
             </IconButton>
             <Button
               variant="text"
-              onClick={() => navigate(`/posts/${post._id}/comments`)}
+              onClick={() =>
+                post.comments?.length && navigate(`/posts/${post._id}/comments`)
+              }
             >
               {post.comments?.length ? post.comments.length : "0"}
             </Button>

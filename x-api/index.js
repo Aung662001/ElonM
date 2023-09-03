@@ -218,8 +218,27 @@ app.get("/users/:handle", async function (req, res) {
             from: "users",
             foreignField: "_id",
             as: "user",
+            // pipeline: [
+            //   {
+            //     $lookup: {
+            //       localField: "followers",
+            //       from: "users",
+            //       foreignField: "_id",
+            //       as: "followeringUser",
+            //     },
+            //   },
+            //   {
+            //     $lookup: {
+            //       from: "users",
+            //       localField: "following",
+            //       foreignField: "_id",
+            //       as: "fgUser",
+            //     },
+            //   },
+            // ],
           },
         },
+
         {
           $limit: 20,
         },
@@ -297,5 +316,36 @@ app.get("/posts/:id/comments", async (req, res) => {
     res.json(format);
   } catch {
     res.status(500);
+  }
+});
+//follower
+app.get("/user/:handle/follower", async (req, res) => {
+  const { handle } = req.params;
+  if (!handle) return res.send(500);
+  try {
+    const user = await xusers
+      .aggregate([
+        { $match: { handle } },
+        {
+          $lookup: {
+            foreignField: "_id",
+            localField: "following",
+            from: "users",
+            as: "followingUsers",
+          },
+        },
+        {
+          $lookup: {
+            foreignField: "_id",
+            localField: "followers",
+            from: "users",
+            as: "followerUsers",
+          },
+        },
+      ])
+      .toArray();
+    res.send(user[0]);
+  } catch (err) {
+    res.send(500);
   }
 });

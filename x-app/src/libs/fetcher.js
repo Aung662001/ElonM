@@ -110,3 +110,11 @@ export async function fetchAllComments(id) {
   }
   return res.json();
 }
+
+export async function fetchFollowing(handle) {
+  const res = await fetch(`${api}/user/${handle}/follower`);
+  if (!res.ok) {
+    return;
+  }
+  return res.json();
+}
