@@ -1,5 +1,3 @@
-import { application } from "express";
-
 const api = "http://localhost:8888";
 
 export function getToken() {
@@ -42,7 +40,7 @@ export async function fetchLogin(handle, password) {
 
 export async function fetchVerify() {
   const token = getToken();
-
+  if (!token) return false;
   const res = await fetch(`${api}/verify`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -121,12 +119,18 @@ export async function fetchFollowing(handle) {
   return res.json();
 }
 
-export async function addNewComment(type, content, userId) {
+export async function addNewComment(type, content, userId, origin) {
+  const token = getToken();
   const res = await fetch(`${api}/new/post`, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ content, type, userId }),
+    body: JSON.stringify({ content, type, userId, origin }),
   });
+  if (!res) {
+    return false;
+  }
+  return res.json();
 }

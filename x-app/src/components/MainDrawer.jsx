@@ -3,6 +3,7 @@ import {
   Login as LoginIcon,
   Person2 as PersonIcon,
   PersonAddAlt as PersonAddAltIcon,
+  Logout as LogoutIcon,
 } from "@mui/icons-material";
 import { pink } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
@@ -78,13 +79,29 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                 <ListItem>
                   <ListItemButton
                     onClick={() => {
-                      // navigate("/");
+                      navigate("/");
                       setAuth(false);
                       toggleDrawer();
                     }}
                   >
                     <ListItemIcon>
                       <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Home" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate("/login");
+                      setAuth(false);
+                      setAuthUser({});
+                      localStorage.removeItem("token");
+                      toggleDrawer();
+                    }}
+                  >
+                    <ListItemIcon>
+                      <LogoutIcon />
                     </ListItemIcon>
                     <ListItemText primary="Logout" />
                   </ListItemButton>
@@ -96,7 +113,7 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                 <ListItem>
                   <ListItemButton
                     onClick={() => {
-                      // navigate("/login");
+                      navigate("/login");
                       setAuth(true);
                       toggleDrawer();
                     }}

@@ -22,10 +22,10 @@ import { fetchToggleLike } from "../libs/fetcher";
 const Post = ({ post, primary, LikeClick }) => {
   const navigate = useNavigate();
   const singlePost = (id) => {
+    console.log(id);
     navigate(`/comment/${id}`);
   };
   const { authUser } = useContext(AuthContext);
-
   return (
     <>
       <Card

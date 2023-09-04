@@ -1,4 +1,4 @@
-import { CssBaseline } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 import { createContext, useMemo, useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { grey, pink } from "@mui/material/colors";
@@ -6,13 +6,14 @@ import App from "./App";
 import { fetchPosts, fetchVerify } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
-
+import { useNavigate } from "react-router-dom";
 export default function ThemedApp() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState("dark");
   const [auth, setAuth] = useState(false);
   const [authUser, setAuthUser] = useState({});
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   //like and unlike
   function LikeClick(_id) {
     setPosts(
@@ -37,17 +38,9 @@ export default function ThemedApp() {
         setLoading(false);
         setAuth(true);
         setAuthUser(user);
+      } else {
+        setLoading(false);
       }
-    })();
-    (async () => {
-      setLoading(true);
-      const posts = await fetchPosts();
-      if (!posts) {
-        return navigate("/login");
-      }
-
-      setPosts(posts);
-      setLoading(false);
     })();
   }, []);
 
@@ -93,6 +86,7 @@ export default function ThemedApp() {
         setPosts,
         loading,
         LikeClick,
+        setLoading,
       }}
     >
       <ThemeContext.Provider value={{ mode, setMode }}>

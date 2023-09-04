@@ -1,18 +1,11 @@
-import React, { useContext, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { IconButton, InputAdornment } from "@mui/material";
+import React, { useContext, useState } from "react";
+
+import { InputAdornment, TextField, IconButton } from "@mui/material";
 import AddCommentIcon from "@mui/icons-material/AddComment";
-import { AuthContext } from "../ThemedApp";
-const NewComment = () => {
-  const [content, setContent] = useState("");
-  const { authUser } = useContext(AuthContext);
-  const addComment = (e) => {
-    e.preventDefault();
-  };
+const NewComment = ({ addComment, setContent, content }) => {
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", mb: 4 }}>
       <TextField
         id="filled-basic"
         label="What is in your mind!"
@@ -23,7 +16,7 @@ const NewComment = () => {
           endAdornment: (
             <InputAdornment position="end">
               <IconButton onClick={(e) => addComment(e)}>
-                <AddCommentIcon />
+                <AddCommentIcon color="info" />
               </IconButton>
             </InputAdornment>
           ),

@@ -40,13 +40,6 @@ export default function Login() {
           const handle = handleInput.current.value;
           const password = passwordInput.current.value;
           (async () => {
-            const res = await fetch(url, {
-              method: "post",
-              body: JSON.stringify({ handle, password }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
             const user = await fetchLogin(handle, password);
             if (!user) return setHasError(true);
             setAuth(true);

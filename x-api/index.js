@@ -19,24 +19,27 @@ const xposts = xdb.collection("posts");
 const xusers = xdb.collection("users");
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
-  // console.log(req.headers, "header");
   const token = authorization && authorization.split(" ")[1];
-  if (!token) {
+  if (token == null || token == undefined) {
     return res.status(400).json({ msg: "Token require" });
   }
-  jwt.verify(token, secret, (err, user) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ msg: "Token is not Valid" });
+  try {
+    const user = jwt.verify(token, secret);
+    if (user) {
+      res.locals.user = user;
+      next();
+    } else {
+      {
+        return res.status(400).json({ msg: "Token is not Valid" });
+      }
     }
-    res.locals.user = user;
-    next();
-  });
+  } catch (err) {
+    res.sendStatus(400);
+  }
 };
 
 app.post("/login", async (req, res) => {
   const { handle, password } = req.body;
-  console.log(handle, password);
   if (!handle || !password) {
     return res.status(400).json({ msg: "handle and password required" });
   }
@@ -174,6 +177,24 @@ app.get("/posts/:id", async function (req, res) {
                   localField: "owner",
                   foreignField: "_id",
                   as: "user",
+                },
+              },
+              {
+                $lookup: {
+                  localField: "_id",
+                  from: "posts",
+                  foreignField: "origin",
+                  as: "comments",
+                  pipeline: [
+                    {
+                      $lookup: {
+                        from: "users",
+                        localField: "owner",
+                        foreignField: "_id",
+                        as: "user",
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -349,14 +370,17 @@ app.get("/user/:handle/follower", async (req, res) => {
     res.send(500);
   }
 });
-app.post("new/post", async (req, res) => {
-  const { content, type, owner } = req.body;
-
-  if (!content) return res.sendStatus(400);
+app.post("/new/post", async (req, res) => {
+  const { content, type, userId, origin } = req.body;
+  if (!content || !type || !userId || !origin)
+    return res.status(400).json({ message: "All fields are required" });
   const data = {
     type,
     body: content,
-    owner: owner,
+    owner: new ObjectId(userId),
+    origin: new ObjectId(origin),
+    created: new Date(),
+    likes: [],
   };
   try {
     const result = await xposts.insertOne(data);

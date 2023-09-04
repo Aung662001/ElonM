@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import ThemedApp from "./ThemedApp";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -12,6 +11,9 @@ import Likes from "./pages/Likes";
 import Comments from "./pages/Comments";
 import Following from "./pages/Following";
 import NewComment from "./pages/NewComment";
+
+// import { Buffer } from "buffer";
+// globalThis.Buffer = Buffer;
 const router = createBrowserRouter([
   {
     path: "/",
@@ -62,5 +64,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );

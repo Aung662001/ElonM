@@ -7,7 +7,22 @@ import { AuthContext } from "../ThemedApp";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { authUser, posts, loading, setPosts } = useContext(AuthContext);
+  const { authUser, posts, loading, setPosts, setLoading } =
+    useContext(AuthContext);
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const posts = await fetchPosts();
+      if (!posts) {
+        setLoading(false);
+        return navigate("/login");
+      }
+
+      setPosts(posts);
+      setLoading(false);
+    })();
+  }, []);
+
   function LikeClick(_id) {
     setPosts(
       posts.map((post) => {
