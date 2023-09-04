@@ -7,6 +7,8 @@ import { fetchPosts, fetchVerify } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
 import { useNavigate } from "react-router-dom";
+import { LinearProgress } from "@mui/material";
+
 export default function ThemedApp() {
   const navigate = useNavigate();
   const [mode, setMode] = useState("dark");
@@ -84,15 +86,14 @@ export default function ThemedApp() {
         setAuthUser,
         posts,
         setPosts,
-        loading,
         LikeClick,
-        setLoading,
       }}
     >
       <ThemeContext.Provider value={{ mode, setMode }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <App />
+          {loading ? <LinearProgress /> : <App />}
+          {/* <App /> */}
         </ThemeProvider>
       </ThemeContext.Provider>
     </AuthContext.Provider>

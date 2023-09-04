@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import Post from "../components/PostCard";
-import { LinearProgress, Box, Avatar, Button } from "@mui/material";
+import { LinearProgress, Box, Avatar, Button, Typography } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { blue } from "@mui/material/colors";
+import { blue, pink } from "@mui/material/colors";
 import { fetchProfile } from "../libs/fetcher";
 import { ThemeContext } from "@emotion/react";
 import { AuthContext } from "../ThemedApp";
@@ -45,6 +45,7 @@ export default function Profile() {
       })
     );
   }
+  console.log(posts);
   return (
     <>
       {!loading ? (
@@ -62,7 +63,7 @@ export default function Profile() {
             <Avatar
               sx={{ background: blue[500], width: 128, height: 128, mb: -7 }}
             >
-              A
+              {posts[0].user.name.charAt(0)}
             </Avatar>
           </Box>
           <Box
@@ -74,10 +75,24 @@ export default function Profile() {
               gap: 4,
             }}
           >
-            <Button onClick={followingClick}>
-              {posts[0].user.following?.length} Following
-            </Button>
-            <Button onClick={followerClick}>follower</Button>
+            <Link
+              to={`/following/${handle}`}
+              style={{ textDecoration: "none", display: "flex", gap: 3 }}
+            >
+              <Typography sx={{ color: pink[500] }}>
+                {posts[0].user.following?.length || "0"}
+              </Typography>
+              Following
+            </Link>
+            <Link
+              to={`/follower/${handle}`}
+              style={{ textDecoration: "none", display: "flex", gap: 3 }}
+            >
+              <Typography sx={{ color: pink[500] }}>
+                {posts[0].user.followers?.length || "0"}
+              </Typography>{" "}
+              Follower
+            </Link>
           </Box>
           {posts.map((post) => {
             return <Post post={post} key={post._id} LikeClick={LikeClick} />;

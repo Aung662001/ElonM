@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import Post from "../components/PostCard";
-import { LinearProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts, fetchToggleLike } from "../libs/fetcher";
 import { AuthContext } from "../ThemedApp";
+import { LinearProgress } from "@mui/material";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { authUser, posts, loading, setPosts, setLoading } =
-    useContext(AuthContext);
+  const { authUser, posts, setPosts } = useContext(AuthContext);
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -17,7 +17,6 @@ export default function Home() {
         setLoading(false);
         return navigate("/login");
       }
-
       setPosts(posts);
       setLoading(false);
     })();

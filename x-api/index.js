@@ -79,6 +79,7 @@ app.get("/posts", auth, async function (req, res) {
   try {
     const data = await xposts
       .aggregate([
+        { $match: { type: "post" } },
         {
           $lookup: {
             localField: "owner",
@@ -95,6 +96,7 @@ app.get("/posts", auth, async function (req, res) {
             as: "comments",
           },
         },
+        { $sort: { created: -1 } },
         { $limit: 20 },
       ])
       .toArray();
@@ -370,18 +372,21 @@ app.get("/user/:handle/follower", async (req, res) => {
     res.send(500);
   }
 });
+//new post
 app.post("/new/post", async (req, res) => {
   const { content, type, userId, origin } = req.body;
-  if (!content || !type || !userId || !origin)
+  if (!content || !type || !userId)
     return res.status(400).json({ message: "All fields are required" });
   const data = {
     type,
     body: content,
     owner: new ObjectId(userId),
-    origin: new ObjectId(origin),
     created: new Date(),
     likes: [],
   };
+  if (origin) {
+    data.origin = new ObjectId(origin);
+  }
   try {
     const result = await xposts.insertOne(data);
     res.json(result);

@@ -134,3 +134,19 @@ export async function addNewComment(type, content, userId, origin) {
   }
   return res.json();
 }
+
+export async function addNewPost(type, content, userId) {
+  const token = getToken();
+  const res = await fetch(`${api}/new/post`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content, type, userId }),
+  });
+  if (!res) {
+    return false;
+  }
+  return res.json();
+}

@@ -3,15 +3,19 @@ import { useParams } from "react-router-dom";
 import { fetchAllComments } from "../libs/fetcher";
 import Post from "../components/PostCard";
 import { AuthContext } from "../ThemedApp";
-
+import { LinearProgress } from "@mui/material";
 const Comments = () => {
+  const [loading, setLoading] = useState(false);
   const { id } = useParams(); //single post id
-  const { loading, authUser } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
   useEffect(() => {
     (async () => {
+      setLoading(true);
       let data = await fetchAllComments(id);
+      if (!data) setLoading(false);
       setComments(data);
+      setLoading(false);
     })();
   }, []);
   function LikeClick(_id) {
@@ -32,9 +36,15 @@ const Comments = () => {
   }
   return (
     <>
-      {comments.map((comment) => {
-        return <Post post={comment} key={comment._id} LikeClick={LikeClick} />;
-      })}
+      {loading ? (
+        <LinearProgress />
+      ) : (
+        comments.map((comment) => {
+          return (
+            <Post post={comment} key={comment._id} LikeClick={LikeClick} />
+          );
+        })
+      )}
     </>
   );
 };

@@ -80,7 +80,6 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                   <ListItemButton
                     onClick={() => {
                       navigate("/");
-                      setAuth(false);
                       toggleDrawer();
                     }}
                   >

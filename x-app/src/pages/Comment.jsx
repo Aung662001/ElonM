@@ -7,7 +7,8 @@ import { AuthContext } from "../ThemedApp";
 import { addNewComment, fetchComments } from "../libs/fetcher";
 const url = "http://localhost:8888/posts";
 export default function Comment() {
-  const { authUser, loading, setLoading } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const { authUser } = useContext(AuthContext);
   const [content, setContent] = useState("");
   const [posts, setPost] = useState([]);
   const [comments, setComments] = useState([]);
@@ -20,10 +21,11 @@ export default function Comment() {
         setPost([data]);
         setComments([...data.comments]);
         setLoading(false);
+      } else {
+        setLoading(false);
       }
     })();
   }, [id]);
-  console.log("rendered");
   //add new comment
   const addComment = async (e) => {
     //type,content,userId

@@ -26,6 +26,9 @@ const Post = ({ post, primary, LikeClick }) => {
     navigate(`/comment/${id}`);
   };
   const { authUser } = useContext(AuthContext);
+  const profileClick = (handle) => {
+    navigate(`/profile/${handle}`);
+  };
   return (
     <>
       <Card
@@ -35,10 +38,10 @@ const Post = ({ post, primary, LikeClick }) => {
         }}
         variant="outlined"
       >
-        <CardActionArea onClick={() => singlePost(post._id)}>
+        <CardActionArea>
           {/* comment.jsx */}
           <CardContent sx={{ display: "flex", p: 2 }}>
-            <Box sx={{ mr: 3 }}>
+            <Box sx={{ mr: 3 }} onClick={() => profileClick(post.user.handle)}>
               <Avatar
                 alt="Profile Picture"
                 sx={{
@@ -51,8 +54,7 @@ const Post = ({ post, primary, LikeClick }) => {
                 {post.user.name.charAt(0)}
               </Avatar>
             </Box>
-
-            <Box>
+            <Box onClick={() => singlePost(post._id)} sx={{ width: "100%" }}>
               <Box sx={{ mb: 1 }}>
                 <Typography sx={{ mr: 1 }} component="span">
                   <b>{post.user.name}</b>
