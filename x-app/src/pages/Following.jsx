@@ -27,7 +27,11 @@ const Following = () => {
   return (
     <Box>
       {ing ? (
-        <UserList title="Following Users" users={following} />
+        <UserList
+          title="Following Users"
+          users={following}
+          setFollowing={setFollowing}
+        />
       ) : (
         <UserList title="Followers " users={follower} />
       )}

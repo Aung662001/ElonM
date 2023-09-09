@@ -10,13 +10,12 @@ import {
 } from "@mui/material";
 
 import { pink } from "@mui/material/colors";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { AuthContext } from "../ThemedApp";
 
-export default function UserList({ users, title }) {
-  const { authUser } = useContext(AuthContext);
+export default function UserList({ users, title, setFollowing }) {
   return (
     <Box>
       <Typography variant="h4" sx={{ textAlign: "center", mb: 3 }}>
@@ -24,7 +23,6 @@ export default function UserList({ users, title }) {
       </Typography>
       <List>
         {users.map((user) => {
-          console.log(user);
           return (
             <ListItem key={user._id} sx={{ d: "flex" }}>
               <Box sx={{ flexGrow: 1 }}>
@@ -41,15 +39,24 @@ export default function UserList({ users, title }) {
                   secondary={user.profile}
                 />
               </Box>
-              {user.followers?.includes(authUser._id) ? (
-                <Button>Unfollow</Button>
-              ) : (
-                <Button variant="contained">Follow</Button>
-              )}
+              {FollowingBtn({ user })}
             </ListItem>
           );
         })}
       </List>
     </Box>
+  );
+}
+function FollowingBtn({ user }) {
+  const { authUser } = useContext(AuthContext);
+  const [follow, setFollow] = useState(user.followers?.includes(authUser._id));
+
+  return (
+    <Button
+      onClick={() => setFollow(!follow)}
+      variant={follow ? "" : "contained"}
+    >
+      {follow ? "Unfollow" : "Follow"}
+    </Button>
   );
 }

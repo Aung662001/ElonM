@@ -45,7 +45,6 @@ export default function Profile() {
       })
     );
   }
-  console.log(posts);
   return (
     <>
       {!loading ? (
