@@ -12,6 +12,7 @@ import Comments from "./pages/Comments";
 import Following from "./pages/Following";
 import NewComment from "./pages/NewComment";
 import AddPost from "./pages/AddPost";
+import Noti from "./pages/Noti";
 
 // import { Buffer } from "buffer";
 // globalThis.Buffer = Buffer;
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: "/posts/add",
         element: <AddPost />,
+      },
+      {
+        path: "/notis",
+        element: <Noti />,
       },
     ],
   },

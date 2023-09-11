@@ -121,7 +121,7 @@ app.get("/users/:handle", async function (req, res) {
   try {
     const data = await xposts
       .aggregate([
-        { $match: { owner: user._id } },
+        { $match: { owner: user._id, type: "post" } },
         {
           $lookup: {
             localField: "owner",

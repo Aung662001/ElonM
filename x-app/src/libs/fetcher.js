@@ -177,3 +177,15 @@ export async function UnfollowToUser({ _id }) {
   }
   return false;
 }
+
+export const fetchNoti = async () => {
+  const token = getToken();
+  const res = await fetch(`${api}/notis`, {
+    method: "get",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res) return false;
+  return await res.json();
+};
