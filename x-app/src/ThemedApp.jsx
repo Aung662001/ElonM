@@ -6,6 +6,7 @@ import App from "./App";
 import { fetchPosts, fetchVerify } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
+export const NotiCountContext = createContext();
 import { useNavigate } from "react-router-dom";
 import { LinearProgress } from "@mui/material";
 
@@ -16,6 +17,7 @@ export default function ThemedApp() {
   const [authUser, setAuthUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [notiCount, setNotiCount] = useState("");
   //like and unlike
   function LikeClick(_id) {
     setPosts(
@@ -91,9 +93,11 @@ export default function ThemedApp() {
     >
       <ThemeContext.Provider value={{ mode, setMode }}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {loading ? <LinearProgress /> : <App />}
-          {/* <App /> */}
+          <NotiCountContext.Provider value={notiCount}>
+            <CssBaseline />
+            {loading ? <LinearProgress /> : <App />}
+            {/* <App /> */}
+          </NotiCountContext.Provider>
         </ThemeProvider>
       </ThemeContext.Provider>
     </AuthContext.Provider>

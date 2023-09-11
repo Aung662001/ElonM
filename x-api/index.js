@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const NotiRouter = require("./router/NotiRouter");
 
 const cors = require("cors");
 app.use(cors());
@@ -10,6 +11,7 @@ app.use(bodyParser.json());
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = "hahaha";
+const auth = require("./middleware/auth");
 
 const { MongoClient, ObjectId } = require("mongodb");
 const mongo = new MongoClient("mongodb://127.0.0.1");
@@ -17,26 +19,26 @@ const mongo = new MongoClient("mongodb://127.0.0.1");
 const xdb = mongo.db("x");
 const xposts = xdb.collection("posts");
 const xusers = xdb.collection("users");
-const auth = (req, res, next) => {
-  const { authorization } = req.headers;
-  const token = authorization && authorization.split(" ")[1];
-  if (token == null || token == undefined) {
-    return res.status(400).json({ msg: "Token require" });
-  }
-  try {
-    const user = jwt.verify(token, secret);
-    if (user) {
-      res.locals.user = user;
-      next();
-    } else {
-      {
-        return res.status(400).json({ msg: "Token is not Valid" });
-      }
-    }
-  } catch (err) {
-    res.sendStatus(400);
-  }
-};
+// const auth = function (req, res, next) {
+//   const { authorization } = req.headers;
+//   const token = authorization && authorization.split(" ")[1];
+//   if (token == null || token == undefined) {
+//     return res.status(400).json({ msg: "Token require" });
+//   }
+//   try {
+//     const user = jwt.verify(token, secret);
+//     if (user) {
+//       res.locals.user = user;
+//       next();
+//     } else {
+//       {
+//         return res.status(400).json({ msg: "Token is not Valid" });
+//       }
+//     }
+//   } catch (err) {
+//     res.status(400).json(err.stack);
+//   }
+// };
 
 app.post("/login", async (req, res) => {
   const { handle, password } = req.body;
@@ -52,7 +54,7 @@ app.post("/login", async (req, res) => {
     }
     return res.status(400).json({ msg: "password is not valid" });
   }
-  return res.sendStatus(500);
+  return res.status(500).json({ msg: "User not found" });
 });
 
 app.post("/users", async (req, res) => {
@@ -394,3 +396,4 @@ app.post("/new/post", async (req, res) => {
     res.sendStatus(500);
   }
 });
+app.use("/notis", NotiRouter);

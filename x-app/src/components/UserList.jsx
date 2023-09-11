@@ -50,7 +50,8 @@ export default function UserList({ users, title, setFollowing }) {
 function FollowingBtn({ user }) {
   const { authUser } = useContext(AuthContext);
   const [follow, setFollow] = useState(user.followers?.includes(authUser._id));
-
+  console.log(follow, "follow");
+  console.log(authUser, user);
   return (
     <Button
       onClick={() => setFollow(!follow)}

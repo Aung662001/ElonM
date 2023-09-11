@@ -14,7 +14,6 @@ const Following = () => {
   const { handle } = useParams();
   const reg = new RegExp("/following/");
   const ing = reg.test(path);
-  console.log(ing);
   useEffect(() => {
     (async () => {
       setLoading(true);

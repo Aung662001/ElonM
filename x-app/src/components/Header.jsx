@@ -5,8 +5,9 @@ import {
   DarkMode as DarkModeIcon,
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useContext, useState } from "react";
-import { AuthContext, ThemeContext } from "../ThemedApp";
+import { AuthContext, NotiCountContext, ThemeContext } from "../ThemedApp";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -23,8 +24,9 @@ export default function Header({ toggleDrawer }) {
   const mainPages = ["/", "/login", "/register"];
   const navigate = useNavigate();
   const { mode, setMode } = useContext(ThemeContext);
-  const [showMenu, setShowMenu] = useState(false);
-  const { setAuth, setAuthUser, auth } = useContext(AuthContext);
+  // const [showMenu, setShowMenu] = useState(false);
+  // const { setAuth, setAuthUser, auth } = useContext(AuthContext);
+  const { notiCount } = useContext(NotiCountContext);
   return (
     <Box sx={{ flexGrow: 1, mb: 3 }}>
       <AppBar position="static" sx={{ bgcolor: "appbar.background" }}>
@@ -70,14 +72,17 @@ export default function Header({ toggleDrawer }) {
               <DarkModeIcon />
             </IconButton>
           )}
-
-          {auth && (
+          <IconButton>
+            <Badge></Badge>
+            <NotificationsIcon />
+          </IconButton>
+          {/* {auth && (
             <IconButton onClick={(e) => setShowMenu(e.currentTarget)}>
               <MoreVertIcon />
             </IconButton>
-          )}
+          )} */}
 
-          <Menu
+          {/* <Menu
             anchorEl={showMenu}
             open={Boolean(showMenu)}
             onClose={() => setShowMenu(false)}
@@ -94,7 +99,7 @@ export default function Header({ toggleDrawer }) {
             >
               Logout
             </MenuItem>
-          </Menu>
+          </Menu> */}
         </Toolbar>
       </AppBar>
     </Box>
