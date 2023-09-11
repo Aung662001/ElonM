@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const NotiRouter = require("./router/NotiRouter");
+const Following = require("./router/Following");
 
 const cors = require("cors");
 app.use(cors());
@@ -396,4 +397,5 @@ app.post("/new/post", async (req, res) => {
     res.sendStatus(500);
   }
 });
+app.use("/following", Following);
 app.use("/notis", NotiRouter);

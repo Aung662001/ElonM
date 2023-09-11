@@ -14,6 +14,7 @@ import { useContext, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { AuthContext } from "../ThemedApp";
+import { UnfollowToUser, followToUser } from "../libs/fetcher";
 
 export default function UserList({ users, title, setFollowing }) {
   return (
@@ -50,11 +51,13 @@ export default function UserList({ users, title, setFollowing }) {
 function FollowingBtn({ user }) {
   const { authUser } = useContext(AuthContext);
   const [follow, setFollow] = useState(user.followers?.includes(authUser._id));
-  console.log(follow, "follow");
   console.log(authUser, user);
   return (
     <Button
-      onClick={() => setFollow(!follow)}
+      onClick={() => {
+        follow ? UnfollowToUser(user) : followToUser(user);
+        setFollow(!follow);
+      }}
       variant={follow ? "" : "contained"}
     >
       {follow ? "Unfollow" : "Follow"}

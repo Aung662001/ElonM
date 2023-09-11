@@ -150,3 +150,30 @@ export async function addNewPost(type, content, userId) {
   }
   return res.json();
 }
+export async function followToUser({ _id }) {
+  const token = getToken();
+  const res = await fetch(`${api}/following/follow/${_id}`, {
+    method: "put",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (res) {
+    return res;
+  }
+  return false;
+}
+
+export async function UnfollowToUser({ _id }) {
+  const token = getToken();
+  const res = await fetch(`${api}/following/unfollow/${_id}`, {
+    method: "put",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (res) {
+    return res;
+  }
+  return false;
+}
