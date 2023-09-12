@@ -93,7 +93,7 @@ export default function ThemedApp() {
     >
       <ThemeContext.Provider value={{ mode, setMode }}>
         <ThemeProvider theme={theme}>
-          <NotiCountContext.Provider value={notiCount}>
+          <NotiCountContext.Provider value={{ notiCount, setNotiCount }}>
             <CssBaseline />
             {loading ? <LinearProgress /> : <App />}
             {/* <App /> */}

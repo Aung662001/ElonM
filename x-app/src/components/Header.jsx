@@ -72,9 +72,21 @@ export default function Header({ toggleDrawer }) {
               <DarkModeIcon />
             </IconButton>
           )}
-          <IconButton>
-            <Badge></Badge>
-            <NotificationsIcon />
+          <IconButton
+            onClick={() => {
+              navigate("/notis");
+            }}
+          >
+            <Badge
+              color="error"
+              badgeContent={notiCount ? notiCount : ""}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <NotificationsIcon />
+            </Badge>
           </IconButton>
           {/* {auth && (
             <IconButton onClick={(e) => setShowMenu(e.currentTarget)}>

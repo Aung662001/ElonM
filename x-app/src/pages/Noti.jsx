@@ -9,19 +9,31 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { fetchNoti } from "../libs/fetcher";
+import React, { useContext, useEffect, useState } from "react";
+import { fetchNoti, fetchReadNoti } from "../libs/fetcher";
+import { NotiCountContext } from "../ThemedApp";
+import { useNavigate } from "react-router-dom";
 const Noti = () => {
+  const navigate = useNavigate();
+  const { notiCount, setNotiCount } = useContext(NotiCountContext);
   const [notis, setNotis] = useState([]);
   useEffect(() => {
     (async () => {
       const result = await fetchNoti();
       if (result) {
         setNotis(result);
+        setNotiCount(result.filter((res) => res.read == false).length);
       }
     })();
   }, []);
-  console.log(notis);
+  const readNoti = (id) => {
+    setNotis(
+      notis.map((noti) => {
+        if (noti._id == id) noti.read = true;
+        return noti;
+      })
+    );
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <Box sx={{ alignSelf: "flex-end" }}>
@@ -30,7 +42,14 @@ const Noti = () => {
       {notis.map((noti) => {
         return (
           <Card key={noti._id} sx={{ opacity: `${noti.read ? ".4" : "1"}` }}>
-            <CardActionArea>
+            <CardActionArea
+              onClick={() => {
+                readNoti(noti._id);
+                fetchReadNoti(noti._id);
+                setNotiCount(notiCount - 1);
+                navigate(`/comment/${noti.target}`);
+              }}
+            >
               <CardContent
                 sx={{ display: "flex", gap: 2, alignItems: "center" }}
               >
@@ -43,7 +62,7 @@ const Noti = () => {
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Avatar></Avatar>
                   <Typography sx={{ font: "lg" }}>
-                    {noti.user[0].name}
+                    {noti.user.name}
                   </Typography>{" "}
                   {noti.msg}
                 </Box>

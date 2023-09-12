@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Post from "../components/PostCard";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts, fetchToggleLike } from "../libs/fetcher";
-import { AuthContext } from "../ThemedApp";
+import { AuthContext, NotiCountContext } from "../ThemedApp";
 import { LinearProgress } from "@mui/material";
 
 export default function Home() {

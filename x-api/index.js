@@ -397,5 +397,6 @@ app.post("/new/post", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 app.use("/following", Following);
 app.use("/notis", NotiRouter);

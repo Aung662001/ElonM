@@ -89,6 +89,7 @@ export async function fetchLikes(id) {
 
 export async function fetchToggleLike(id) {
   const token = getToken();
+  addNewNoti("like", id);
   const res = await fetch(`${api}/posts/${id}/like`, {
     method: "put",
     headers: {
@@ -132,7 +133,9 @@ export async function addNewComment(type, content, userId, origin) {
   if (!res) {
     return false;
   }
-  return res.json();
+  const result = await res.json();
+  addNewNoti("comment", origin);
+  return result;
 }
 
 export async function addNewPost(type, content, userId) {
@@ -188,4 +191,27 @@ export const fetchNoti = async () => {
   });
   if (!res) return false;
   return await res.json();
+};
+
+export const fetchReadNoti = async (id) => {
+  const token = getToken();
+  const res = await fetch(`${api}/notis/read/${id}`, {
+    method: "put",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+};
+export const addNewNoti = async (type, target) => {
+  const token = getToken();
+  const res = await fetch(`${api}/notis/new`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ type, target }),
+  });
+  if (!res) return false;
+  return res;
 };
