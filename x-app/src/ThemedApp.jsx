@@ -32,7 +32,13 @@ export default function ThemedApp() {
   // };
 
   wsc.onmessage = (e) => {
-    console.log("connect");
+    alert("noti");
+    // (async () => {
+    //   const result = await fetchNoti();
+    //   if (result) {
+    //     setNotiCount(result.filter((res) => res.read == false).length);
+    //   }
+    // })();
   };
   //like and unlike
   function LikeClick(_id) {

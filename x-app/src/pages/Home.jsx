@@ -28,7 +28,6 @@ export default function Home() {
         if (post._id == _id) {
           if (post.likes.includes(authUser._id)) {
             post.likes = post.likes.filter((like) => like !== authUser._id);
-            console.log(post.likes);
           } else {
             post.likes.push(authUser._id);
           }

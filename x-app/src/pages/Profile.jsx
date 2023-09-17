@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { blue, pink } from "@mui/material/colors";
-import { fetchProfile, uploadCover } from "../libs/fetcher";
+import { fetchProfile, uploadCover, uploadPhoto } from "../libs/fetcher";
 import { ThemeContext } from "@emotion/react";
 import { AuthContext } from "../ThemedApp";
 const url = "http://localhost:8888/users";
@@ -24,11 +24,19 @@ export default function Profile() {
   const { authUser } = useContext(AuthContext);
   const [cover, setCover] = useState([]);
   const [photo, setPhoto] = useState([]);
+  const [user, setUser] = useState([]);
   useEffect(() => {
     (async () => {
       setLoading(true);
       const data = await fetchProfile(handle);
-      setPosts(data);
+      setUser(data.user);
+      setPosts(data.formatUser);
+      if (data.user.coverImage) {
+        setCover(`http://localhost:8888/images/${data.user.coverImage}`);
+      }
+      if (data.user.profilePhoto) {
+        setPhoto(`http://localhost:8888/images/${data.user.profilePhoto}`);
+      }
       setLoading(false);
     })();
   }, [handle]);
@@ -72,14 +80,18 @@ export default function Profile() {
 
     const formData = new FormData();
     formData.append("cover", file);
-    console.log(formData);
-    uploadCover(posts[0].user._id, formData);
+    uploadCover(authUser._id, formData);
   };
   const changePhoto = async () => {
     if (authUser.handle !== handle) return false;
     const file = await getFile();
     setPhoto(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("photo", file);
+    uploadPhoto(authUser._id, formData);
   };
+  console.log(user.name);
   return (
     <>
       {!loading ? (
@@ -119,7 +131,7 @@ export default function Profile() {
                 {photo.length ? (
                   <img src={photo} width="128" height="128" />
                 ) : (
-                  posts[0].user.name[0]
+                  user.name[0]
                 )}
               </Avatar>
             </IconButton>
@@ -138,7 +150,7 @@ export default function Profile() {
               style={{ textDecoration: "none", display: "flex", gap: 3 }}
             >
               <Typography sx={{ color: pink[500] }}>
-                {posts[0].user.following?.length || "0"}
+                {user.following?.length || "0"}
               </Typography>
               Following
             </Link>
@@ -147,12 +159,12 @@ export default function Profile() {
               style={{ textDecoration: "none", display: "flex", gap: 3 }}
             >
               <Typography sx={{ color: pink[500] }}>
-                {posts[0].user.followers?.length || "0"}
+                {user.followers?.length || "0"}
               </Typography>{" "}
               Follower
             </Link>
           </Box>
-          {posts.map((post) => {
+          {posts?.map((post) => {
             return <Post post={post} key={post._id} LikeClick={LikeClick} />;
           })}
         </Box>

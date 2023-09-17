@@ -3,12 +3,12 @@ const app = express();
 const NotiRouter = require("./router/NotiRouter");
 const Following = require("./router/Following");
 const uploadCoverRouter = require("./router/uploadCover");
+const uploadPhotoRouter = require("./router/uploadPhoto");
 
 const cors = require("cors");
 app.use(cors());
 require("express-ws")(app);
 const clients = [];
-
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -38,7 +38,7 @@ app.ws("/connect", (wss, req) => {
     });
   });
 });
-
+app.use("/images", express.static("images"));
 app.post("/login", async (req, res) => {
   const { handle, password } = req.body;
   if (!handle || !password) {
@@ -113,7 +113,7 @@ app.get("/posts", auth, async function (req, res) {
   }
 });
 //post in profile
-app.get("/users/:handle", async function (req, res) {
+app.get("/users/:handle/profile", async function (req, res) {
   const { handle } = req.params;
   const user = await xusers.findOne({ handle });
   try {
@@ -137,7 +137,7 @@ app.get("/users/:handle", async function (req, res) {
       delete post.user.password;
       return post;
     });
-    return res.json(formatUser);
+    return res.json({ user, formatUser });
   } catch (err) {
     return res.sendStatus(500);
   }
@@ -396,7 +396,11 @@ app.post("/new/post", async (req, res) => {
     res.sendStatus(500);
   }
 });
-
+const clientInsert = (req, res, next) => {
+  req.clients = clients;
+  next();
+};
 app.use("/following", Following);
-app.use("/notis", NotiRouter);
-app.use("/uploads/coverImage", uploadCoverRouter);
+app.use("/notis", clientInsert, NotiRouter);
+app.use("/upload/coverImage", uploadCoverRouter);
+app.use("/upload/photo", uploadPhotoRouter);

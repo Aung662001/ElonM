@@ -74,9 +74,8 @@ export async function fetchComments(id) {
 }
 
 export async function fetchProfile(handle) {
-  const res = await fetch(`${api}/users/${handle}`);
+  const res = await fetch(`${api}/users/${handle}/profile`);
   if (!res.ok) return false;
-
   return await res.json();
 }
 
@@ -220,6 +219,17 @@ export const uploadCover = async (id, formData) => {
   console.log(id, formData);
   const token = getToken();
   const res = await fetch(`${api}/upload/coverImage/${id}`, {
+    method: "post",
+    body: formData,
+  });
+  if (!res) return false;
+  return res;
+};
+
+export const uploadPhoto = async (id, formData) => {
+  console.log(id, formData);
+  const token = getToken();
+  const res = await fetch(`${api}/upload/photo/${id}`, {
     method: "post",
     body: formData,
   });
