@@ -10,13 +10,15 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { fetchNoti, fetchReadNoti } from "../libs/fetcher";
+import { fetchNoti, fetchReadNoti, getToken } from "../libs/fetcher";
 import { NotiCountContext } from "../ThemedApp";
 import { useNavigate } from "react-router-dom";
+
 const Noti = () => {
   const navigate = useNavigate();
   const { notiCount, setNotiCount } = useContext(NotiCountContext);
   const [notis, setNotis] = useState([]);
+
   useEffect(() => {
     (async () => {
       const result = await fetchNoti();

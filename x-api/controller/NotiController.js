@@ -78,6 +78,11 @@ const addNewNoti = async (req, res) => {
   };
   try {
     await xnotis.insertOne(noti);
+    clients.map((client) => {
+      if (client.uid == ownerPost.owner.toString()) {
+        client.send("noti updated");
+      }
+    });
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

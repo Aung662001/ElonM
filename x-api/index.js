@@ -6,6 +6,8 @@ const uploadCoverRouter = require("./router/uploadCover");
 
 const cors = require("cors");
 app.use(cors());
+require("express-ws")(app);
+const clients = [];
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,26 +23,21 @@ const mongo = new MongoClient("mongodb://127.0.0.1");
 const xdb = mongo.db("x");
 const xposts = xdb.collection("posts");
 const xusers = xdb.collection("users");
-// const auth = function (req, res, next) {
-//   const { authorization } = req.headers;
-//   const token = authorization && authorization.split(" ")[1];
-//   if (token == null || token == undefined) {
-//     return res.status(400).json({ msg: "Token require" });
-//   }
-//   try {
-//     const user = jwt.verify(token, secret);
-//     if (user) {
-//       res.locals.user = user;
-//       next();
-//     } else {
-//       {
-//         return res.status(400).json({ msg: "Token is not Valid" });
-//       }
-//     }
-//   } catch (err) {
-//     res.status(400).json(err.stack);
-//   }
-// };
+
+app.ws("/connect", (wss, req) => {
+  wss.on("message", (token) => {
+    console.log("message received");
+    jwt.verify(token, secret, (err, user) => {
+      if (err) return false;
+
+      if (!clients.find((client) => client.uid == user._id)) {
+        wss.uid = user._id;
+        clients.push(wss);
+        console.log("added new Client");
+      }
+    });
+  });
+});
 
 app.post("/login", async (req, res) => {
   const { handle, password } = req.body;
@@ -402,4 +399,4 @@ app.post("/new/post", async (req, res) => {
 
 app.use("/following", Following);
 app.use("/notis", NotiRouter);
-app.use("/upload/coverImage", uploadCoverRouter);
+app.use("/uploads/coverImage", uploadCoverRouter);

@@ -5,8 +5,6 @@ const auth = require("../middleware/auth");
 const UploadController = require("../controller/UploadController");
 const multer = require("multer");
 const upload = multer({ dest: "images/" });
-router
-  .use(upload.single("cover"))
-  .post("/coverImage", UploadController.uploadCover);
+router.use(upload.single("cover")).post("/:id", UploadController.uploadCover);
 
 module.exports = router;

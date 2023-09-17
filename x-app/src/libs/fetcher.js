@@ -219,7 +219,7 @@ export const addNewNoti = async (type, target) => {
 export const uploadCover = async (id, formData) => {
   console.log(id, formData);
   const token = getToken();
-  const res = await fetch(`${api}/upload/coverImage`, {
+  const res = await fetch(`${api}/upload/coverImage/${id}`, {
     method: "post",
     body: formData,
   });

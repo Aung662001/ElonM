@@ -3,13 +3,16 @@ import { createContext, useMemo, useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { grey, pink } from "@mui/material/colors";
 import App from "./App";
-import { fetchPosts, fetchVerify } from "./libs/fetcher";
+import { fetchPosts, fetchVerify, getToken } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
 export const NotiCountContext = createContext();
 import { useNavigate } from "react-router-dom";
 import { LinearProgress } from "@mui/material";
-
+const wsc = new WebSocket("ws://localhost:8888/connect");
+wsc.onopen = () => {
+  wsc.send(getToken());
+};
 export default function ThemedApp() {
   const navigate = useNavigate();
   const [mode, setMode] = useState("dark");
@@ -18,6 +21,19 @@ export default function ThemedApp() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notiCount, setNotiCount] = useState("");
+
+  // wsc.onmessage = () => {
+  //   (async () => {
+  //     const result = await fetchNoti();
+  //     if (result) {
+  //       setNotiCount(result.filter((res) => res.read == false).length);
+  //     }
+  //   })();
+  // };
+
+  wsc.onmessage = (e) => {
+    console.log("connect");
+  };
   //like and unlike
   function LikeClick(_id) {
     setPosts(
