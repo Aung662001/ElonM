@@ -1,9 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import Post from "../components/PostCard";
-import { LinearProgress, Box, Avatar, Button, Typography } from "@mui/material";
+import {
+  LinearProgress,
+  Box,
+  Avatar,
+  Button,
+  Typography,
+  Card,
+  CardActionArea,
+  IconButton,
+} from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { blue, pink } from "@mui/material/colors";
-import { fetchProfile } from "../libs/fetcher";
+import { fetchProfile, uploadCover } from "../libs/fetcher";
 import { ThemeContext } from "@emotion/react";
 import { AuthContext } from "../ThemedApp";
 const url = "http://localhost:8888/users";
@@ -13,6 +22,8 @@ export default function Profile() {
   const { handle } = useParams();
   const navigate = useNavigate();
   const { authUser } = useContext(AuthContext);
+  const [cover, setCover] = useState([]);
+  const [photo, setPhoto] = useState([]);
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -21,13 +32,6 @@ export default function Profile() {
       setLoading(false);
     })();
   }, [handle]);
-
-  const followingClick = () => {
-    navigate(`/following/${handle}`);
-  };
-  const followerClick = () => {
-    navigate(`/follower/${handle}`);
-  };
 
   //
   function LikeClick(_id) {
@@ -45,25 +49,80 @@ export default function Profile() {
       })
     );
   }
+  const getFile = async () => {
+    const [fileHandle] = await window.showOpenFilePicker({
+      types: [
+        {
+          description: "Images",
+          accept: {
+            "image/*": [".png", ".jpg", ".jpeg"],
+          },
+        },
+      ],
+      excludeAcceptAllOption: true,
+      multiple: false,
+    });
+    return await fileHandle.getFile();
+  };
+  //
+  const changeCover = async () => {
+    if (authUser.handle !== handle) return false;
+    const file = await getFile();
+    setCover(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("cover", file);
+    console.log(formData);
+    uploadCover(posts[0].user._id, formData);
+  };
+  const changePhoto = async () => {
+    if (authUser.handle !== handle) return false;
+    const file = await getFile();
+    setPhoto(URL.createObjectURL(file));
+  };
   return (
     <>
       {!loading ? (
         <Box>
+          <Card>
+            <CardActionArea
+              sx={{
+                bgcolor: "banner.background",
+                height: 200,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onClick={changeCover}
+            >
+              <img src={cover} alt="" style={{ width: "100%" }} />
+            </CardActionArea>
+          </Card>
           <Box
             sx={{
-              height: 200,
-              backgroundColor: "gray",
               display: "flex",
+              alignItems: "center",
               justifyContent: "center",
-              alignItems: "flex-end",
-              mb: 9,
+              mb: 8,
+              mt: -9,
             }}
           >
-            <Avatar
-              sx={{ background: blue[500], width: 128, height: 128, mb: -7 }}
-            >
-              {posts[0].user.name.charAt(0)}
-            </Avatar>
+            <IconButton onClick={changePhoto}>
+              <Avatar
+                src=""
+                sx={{
+                  background: pink[500],
+                  width: 128,
+                  height: 128,
+                }}
+              >
+                {photo.length ? (
+                  <img src={photo} width="128" height="128" />
+                ) : (
+                  posts[0].user.name[0]
+                )}
+              </Avatar>
+            </IconButton>
           </Box>
           <Box
             sx={{

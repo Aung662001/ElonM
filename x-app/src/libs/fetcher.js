@@ -215,3 +215,14 @@ export const addNewNoti = async (type, target) => {
   if (!res) return false;
   return res;
 };
+//upload cover photo
+export const uploadCover = async (id, formData) => {
+  console.log(id, formData);
+  const token = getToken();
+  const res = await fetch(`${api}/upload/coverImage`, {
+    method: "post",
+    body: formData,
+  });
+  if (!res) return false;
+  return res;
+};

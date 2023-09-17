@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const NotiRouter = require("./router/NotiRouter");
 const Following = require("./router/Following");
+const uploadCoverRouter = require("./router/uploadCover");
 
 const cors = require("cors");
 app.use(cors());
@@ -184,6 +185,7 @@ app.get("/posts/:id", async function (req, res) {
                   as: "user",
                 },
               },
+              { $sort: { created: -1 } },
               {
                 $lookup: {
                   localField: "_id",
@@ -400,3 +402,4 @@ app.post("/new/post", async (req, res) => {
 
 app.use("/following", Following);
 app.use("/notis", NotiRouter);
+app.use("/upload/coverImage", uploadCoverRouter);
