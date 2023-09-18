@@ -45,7 +45,7 @@ export default function MainDrawer({ showDrawer, toggleDrawer }) {
                 // background: "#59f",
               }}
             >
-              {auth ? authUser.name : "U"}
+              {auth ? authUser.name.charAt(0) : "U"}
             </Avatar>
             {auth && (
               <>
