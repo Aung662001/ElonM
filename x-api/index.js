@@ -6,6 +6,7 @@ const Following = require("./router/Following");
 const uploadCoverRouter = require("./router/uploadCover");
 const uploadPhotoRouter = require("./router/uploadPhoto");
 const searchUserRouter = require("./router/SearchUser");
+const editProfileInfoRouter = require("./router/editProfileInfo");
 
 const cors = require("cors");
 app.use(cors());
@@ -407,3 +408,4 @@ app.use("/notis", clientInsert, NotiRouter);
 app.use("/upload/coverImage", uploadCoverRouter);
 app.use("/upload/photo", uploadPhotoRouter);
 app.use("/searchUser", searchUserRouter);
+app.use("/edit", editProfileInfoRouter);

@@ -11,8 +11,8 @@ const follow = async (req, res) => {
   const targetUser = await xusers.findOne({ _id: new ObjectId(targetId) });
   const authUser = await xusers.findOne({ _id: new ObjectId(user._id) });
 
-  targetUser.followers = targetUser.follower || [];
-  authUser.following = authUser.following || [];
+  targetUser.followers = targetUser?.follower || [];
+  authUser.following = authUser?.following || [];
 
   targetUser.followers = [...targetUser.followers, new ObjectId(user._id)];
   authUser.following = [...authUser.following, new ObjectId(targetId)];

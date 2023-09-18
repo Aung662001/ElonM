@@ -1,10 +1,26 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../ThemedApp";
+import FileDropZone from "./FileDropZone";
+import {
+  editNameAndHandle,
+  fetchLogin,
+  fetchProfile,
+  fetchVerify,
+  uploadCover,
+  uploadPhoto,
+} from "../libs/fetcher";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ open, setOpen }) => {
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false);
-  const { authUser } = useContext(AuthContext);
+  const [cover, setCover] = useState([]);
+  const [photo, setPhoto] = useState([]);
+  const [name, setName] = useState("");
+  const [handle, setHandle] = useState("");
+
+  const { setAuth, setAuthUser, authUser } = useContext(AuthContext);
   //style for modal
   const style = {
     position: "absolute",
@@ -16,6 +32,35 @@ const EditProfile = ({ open, setOpen }) => {
     border: "none",
     boxShadow: 24,
     p: 4,
+  };
+  const onFileSelected = (file) => {
+    setCover(file);
+    const formData = new FormData();
+    formData.append("cover", file);
+    uploadCover(authUser._id, formData);
+    fetchProfile(authUser.handle);
+  };
+  const onPhotoSelected = (file) => {
+    setPhoto(file);
+    const formData = new FormData();
+    formData.append("photo", file);
+    uploadPhoto(authUser._id, formData);
+    fetchProfile(authUser.handle);
+  };
+
+  const editConfirm = async () => {
+    if (!name & !handle) {
+      return;
+    }
+    const res = await editNameAndHandle(name, handle);
+    if (res) {
+      setName("");
+      setHandle("");
+      setOpen(false);
+      setAuth(false);
+      setAuthUser({});
+      navigate("/login");
+    }
   };
   return (
     <Modal
@@ -30,22 +75,39 @@ const EditProfile = ({ open, setOpen }) => {
         </Typography>
         <TextField
           id="outlined-basic"
-          placeholder={authUser.name}
+          placeholder="Name"
           variant="outlined"
           fullWidth
           sx={{ mb: 2 }}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <TextField
           id="outlined-basic"
           //   label={authUser.handle}
-          placeholder={authUser.handle}
+          placeholder="handle"
           variant="outlined"
           fullWidth
           sx={{ mb: 2 }}
+          value={handle}
+          onChange={(e) => setHandle(e.target.value)}
         />
-        <Button variant="contained">Confirm</Button>
+        <FileDropZone onFileSelected={onFileSelected} />
+        <FileDropZone onFileSelected={onPhotoSelected} photo={true} />
+        <Button
+          variant="contained"
+          sx={{ mt: 2 }}
+          onClick={() => {
+            editConfirm();
+          }}
+        >
+          Confirm
+        </Button>
         <p>
-          <small>You can Edit Cover and Profile Photo By clicking On it.</small>
+          <small>
+            If You Change Name or Handle , You Need To{" "}
+            <b style={{ color: "red" }}>Login again!</b>
+          </small>
         </p>
       </Box>
     </Modal>

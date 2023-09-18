@@ -254,3 +254,18 @@ export const searchUser = async (text) => {
   }
   return false;
 };
+export const editNameAndHandle = async (name, handle) => {
+  const token = getToken();
+  const res = await fetch(`${api}/edit/info`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name, handle }),
+  });
+  if (res.status == 200) {
+    return res;
+  }
+  return false;
+};
