@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const app = express();
 const NotiRouter = require("./router/NotiRouter");
 const Following = require("./router/Following");
@@ -18,7 +19,7 @@ const secret = "hahaha";
 const auth = require("./middleware/auth");
 
 const { MongoClient, ObjectId } = require("mongodb");
-const mongo = new MongoClient("mongodb://127.0.0.1");
+const mongo = new MongoClient(process.env.DATABASE_URL);
 
 const xdb = mongo.db("x");
 const xposts = xdb.collection("posts");

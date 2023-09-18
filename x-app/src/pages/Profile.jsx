@@ -17,7 +17,7 @@ import { ThemeContext } from "@emotion/react";
 import { AuthContext } from "../ThemedApp";
 import { FollowingBtn } from "../components/UserList";
 import EditProfile from "../components/EditProfile";
-const url = "http://localhost:8888/users";
+const imageUrl = import.meta.env.VITE_BACKEND_IMAGE_URL;
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -35,10 +35,10 @@ export default function Profile() {
       setUser(data.user);
       setPosts(data.formatUser);
       if (data.user.coverImage) {
-        setCover(`http://localhost:8888/images/${data.user.coverImage}`);
+        setCover(`${imageUrl}${data.user.coverImage}`);
       }
       if (data.user.profilePhoto) {
-        setPhoto(`http://localhost:8888/images/${data.user.profilePhoto}`);
+        setPhoto(`${imageUrl}${data.user.profilePhoto}`);
       }
       setLoading(false);
     })();

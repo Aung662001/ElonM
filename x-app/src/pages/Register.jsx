@@ -9,6 +9,7 @@ import {
 
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchRegister } from "../libs/fetcher";
 
 const url = "http://localhost:8888/users";
 export default function Register() {
@@ -42,18 +43,7 @@ export default function Register() {
           const name = nameInput.current.value;
           const profile = profileInput.current.value;
           (async () => {
-            const res = await fetch(url, {
-              method: "post",
-              body: JSON.stringify({
-                name,
-                password,
-                handle,
-                profile,
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
+            const res = await fetchRegister(name, handle, profile, password);
             if (res.ok) {
               navigate("/login");
             } else {

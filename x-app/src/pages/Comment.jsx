@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import NewComment from "./NewComment";
 import { AuthContext } from "../ThemedApp";
 import { addNewComment, fetchComments } from "../libs/fetcher";
-const url = "http://localhost:8888/posts";
 export default function Comment() {
   const [loading, setLoading] = useState(false);
   const { authUser } = useContext(AuthContext);

@@ -1,5 +1,6 @@
-const api = "http://localhost:8888";
-
+const api = import.meta.env.VITE_BACKEND_URL;
+// const api = "http://localhost:8888";
+console.log(api);
 export function getToken() {
   return JSON.parse(localStorage.getItem("token") || null);
 }
@@ -18,7 +19,10 @@ export async function fetchRegister(name, handle, profile, password) {
     },
   });
 
-  return res.ok;
+  if (res.status === 200) {
+    return res;
+  }
+  return false;
 }
 
 export async function fetchLogin(handle, password) {

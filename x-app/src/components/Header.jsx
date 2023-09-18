@@ -1,14 +1,13 @@
 import {
   Menu as MenuIcon,
-  MoreVert as MoreVertIcon,
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon,
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useContext, useState } from "react";
-import { AuthContext, NotiCountContext, ThemeContext } from "../ThemedApp";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { NotiCountContext, ThemeContext } from "../ThemedApp";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -79,7 +78,7 @@ export default function Header({ toggleDrawer }) {
           >
             <Badge
               color="error"
-              badgeContent={notiCount ? notiCount : ""}
+              badgeContent={notiCount}
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
