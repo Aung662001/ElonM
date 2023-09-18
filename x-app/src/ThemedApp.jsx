@@ -3,7 +3,7 @@ import { createContext, useMemo, useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { grey, pink } from "@mui/material/colors";
 import App from "./App";
-import { fetchPosts, fetchVerify, getToken } from "./libs/fetcher";
+import { fetchNoti, fetchPosts, fetchVerify, getToken } from "./libs/fetcher";
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
 export const NotiCountContext = createContext();
@@ -66,6 +66,12 @@ export default function ThemedApp() {
         setAuthUser(user);
       } else {
         setLoading(false);
+      }
+    })();
+    (async () => {
+      const result = await fetchNoti();
+      if (result) {
+        setNotiCount(result.filter((res) => res.read == false).length);
       }
     })();
   }, []);

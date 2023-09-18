@@ -40,7 +40,8 @@ export default function UserList({ users, title, setFollowing }) {
                   secondary={user.profile}
                 />
               </Box>
-              {FollowingBtn({ user })}
+              {/* {FollowingBtn({ user })} */}
+              <FollowingBtn user={user} />
             </ListItem>
           );
         })}
@@ -48,9 +49,10 @@ export default function UserList({ users, title, setFollowing }) {
     </Box>
   );
 }
-function FollowingBtn({ user }) {
+export function FollowingBtn({ user }) {
   const { authUser } = useContext(AuthContext);
   const [follow, setFollow] = useState(user.followers?.includes(authUser._id));
+  if (user._id == authUser._id) return;
   return (
     <Button
       onClick={() => {

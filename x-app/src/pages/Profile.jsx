@@ -15,6 +15,8 @@ import { blue, pink } from "@mui/material/colors";
 import { fetchProfile, uploadCover, uploadPhoto } from "../libs/fetcher";
 import { ThemeContext } from "@emotion/react";
 import { AuthContext } from "../ThemedApp";
+import { FollowingBtn } from "../components/UserList";
+import EditProfile from "../components/EditProfile";
 const url = "http://localhost:8888/users";
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -25,6 +27,7 @@ export default function Profile() {
   const [cover, setCover] = useState([]);
   const [photo, setPhoto] = useState([]);
   const [user, setUser] = useState([]);
+  const [openEditPf, setOpenEditPf] = useState(false);
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -91,7 +94,7 @@ export default function Profile() {
     formData.append("photo", file);
     uploadPhoto(authUser._id, formData);
   };
-  console.log(user.name);
+
   return (
     <>
       {!loading ? (
@@ -136,6 +139,7 @@ export default function Profile() {
               </Avatar>
             </IconButton>
           </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -163,7 +167,15 @@ export default function Profile() {
               </Typography>{" "}
               Follower
             </Link>
+            <FollowingBtn user={user} />
+            {authUser._id == user._id && (
+              <Button variant="outlined" onClick={() => setOpenEditPf(true)}>
+                Edit Profile
+              </Button>
+            )}
           </Box>
+          {/* Edit profile model */}
+          <EditProfile open={openEditPf} setOpen={setOpenEditPf} />
           {posts?.map((post) => {
             return <Post post={post} key={post._id} LikeClick={LikeClick} />;
           })}
