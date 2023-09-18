@@ -40,7 +40,7 @@ const FileDropZone = ({ onFileSelected, photo }) => {
         <img
           src={previewUrl}
           alt="Preview"
-          style={{ maxHeight: "200px", maxWidth: "300px" }}
+          style={{ maxHeight: "50px", maxWidth: "100px" }}
         />
       ) : isDragActive ? (
         <p>{"Drop the file here ..."}</p>

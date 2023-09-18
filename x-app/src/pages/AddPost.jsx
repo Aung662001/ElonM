@@ -2,9 +2,11 @@ import { Box, Button, TextField } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { addNewPost } from "../libs/fetcher";
 import { AuthContext } from "../ThemedApp";
+import { useNavigate } from "react-router-dom";
 
 //type, content, userId
 const AddPost = () => {
+  const navigate = useNavigate();
   const [content, setContent] = useState("");
   const { authUser } = useContext(AuthContext);
   const submitPost = async (e) => {
@@ -13,6 +15,9 @@ const AddPost = () => {
       return;
     }
     let res = await addNewPost("post", content, authUser._id);
+    if (res) {
+      navigate("../");
+    }
   };
   return (
     <>

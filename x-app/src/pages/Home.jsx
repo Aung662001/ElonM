@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Post from "../components/PostCard";
 import { useNavigate } from "react-router-dom";
-import { fetchPosts, fetchToggleLike } from "../libs/fetcher";
+import { deleteSinglePost, fetchPosts, fetchToggleLike } from "../libs/fetcher";
 import { AuthContext, NotiCountContext } from "../ThemedApp";
 import { LinearProgress } from "@mui/material";
 
@@ -21,7 +21,13 @@ export default function Home() {
       setLoading(false);
     })();
   }, []);
-
+  //for delete post inside postcard
+  const deletePost = async (id) => {
+    let res = await deleteSinglePost(id);
+    if (res) {
+      setPosts((posts) => [...posts.filter((post) => post._id !== id)]);
+    }
+  };
   function LikeClick(_id) {
     setPosts(
       posts.map((post) => {
@@ -40,7 +46,14 @@ export default function Home() {
     <>
       {!loading ? (
         posts.map((post) => {
-          return <Post post={post} key={post._id} LikeClick={LikeClick} />;
+          return (
+            <Post
+              post={post}
+              key={post._id}
+              LikeClick={LikeClick}
+              deletePost={deletePost}
+            />
+          );
         })
       ) : (
         <LinearProgress />

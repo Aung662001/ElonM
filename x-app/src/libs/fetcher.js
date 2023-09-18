@@ -269,3 +269,17 @@ export const editNameAndHandle = async (name, handle) => {
   }
   return false;
 };
+export const deleteSinglePost = async (id) => {
+  const token = getToken();
+  const res = await fetch(`${api}/delete/post/${id}`, {
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (res.status == 200) {
+    return res;
+  }
+  return false;
+};

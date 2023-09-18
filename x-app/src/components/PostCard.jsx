@@ -8,18 +8,26 @@ import {
   Button,
   ButtonGroup,
   IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { pink, blue, blueGrey } from "@mui/material/colors";
 import { formatRelative, parseISO, formatDistance } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { Favorite as LikedIcon } from "@mui/icons-material";
+import {
+  Delete,
+  Favorite as LikedIcon,
+  MoreVert,
+  Share,
+} from "@mui/icons-material";
 import MessageIcon from "@mui/icons-material/Message";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../ThemedApp";
 import { fetchToggleLike } from "../libs/fetcher";
 
-const Post = ({ post, primary, LikeClick }) => {
+const Post = ({ post, primary, LikeClick, deletePost }) => {
+  const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
   const singlePost = (id) => {
     navigate(`/comment/${id}`);
@@ -28,6 +36,7 @@ const Post = ({ post, primary, LikeClick }) => {
   const profileClick = (handle) => {
     navigate(`/profile/${handle}`);
   };
+
   return (
     <>
       <Card
@@ -54,7 +63,13 @@ const Post = ({ post, primary, LikeClick }) => {
               </Avatar>
             </Box>
             <Box onClick={() => singlePost(post._id)} sx={{ width: "100%" }}>
-              <Box sx={{ mb: 1 }}>
+              <Box
+                sx={{
+                  mb: 1,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <Typography sx={{ mr: 1 }} component="span">
                   <b>{post.user.name}</b>
                 </Typography>
@@ -120,6 +135,31 @@ const Post = ({ post, primary, LikeClick }) => {
               {post.comments?.length ? post.comments.length : "0"}
             </Button>
           </ButtonGroup>
+          {/* for delete  */}
+          <IconButton onClick={(e) => setShowMenu(e.currentTarget)}>
+            <MoreVert />
+          </IconButton>
+          <Menu
+            anchorEl={showMenu}
+            open={Boolean(showMenu)}
+            onClose={() => setShowMenu(false)}
+          >
+            {post.owner === authUser._id && (
+              <MenuItem
+                sx={{
+                  width: 200,
+                  color: "red",
+                }}
+                onClick={() => deletePost(post._id)}
+              >
+                <Delete /> Delete Post
+              </MenuItem>
+            )}
+            <MenuItem sx={{ width: 200 }}>
+              <Share />
+              Share
+            </MenuItem>
+          </Menu>
         </Box>
       </Card>
     </>
