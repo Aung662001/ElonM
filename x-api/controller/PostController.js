@@ -8,6 +8,9 @@ const xposts = db.collection("posts");
 const deletePost = async (req, res) => {
   const id = req.params.id;
   try {
+    await xposts.deleteMany({
+      $and: [{ owner: new ObjectId(id) }, { type: "comment" }],
+    });
     const data = await xposts.deleteOne({ _id: new ObjectId(id) });
     return res.send(data);
   } catch (err) {
