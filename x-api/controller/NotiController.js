@@ -1,5 +1,5 @@
 const { MongoClient, ObjectId } = require("mongodb");
-const mongo = new MongoClient("mongodb://127.0.0.1");
+const mongo = new MongoClient(process.env.DATABASE_URL);
 const db = mongo.db("x");
 const xnotis = db.collection("notis");
 const xusers = db.collection("users");

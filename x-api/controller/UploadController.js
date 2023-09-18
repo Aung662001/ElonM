@@ -1,6 +1,6 @@
 const { MongoClient, ObjectId } = require("mongodb");
 const removeOldPhoto = require("../ultis/removeOldPhoto");
-const mongo = new MongoClient("mongodb://127.0.0.1");
+const mongo = new MongoClient(process.env.DATABASE_URL);
 const db = mongo.db("x");
 const xusers = db.collection("users");
 const uploadCover = async (req, res) => {

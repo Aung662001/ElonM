@@ -240,3 +240,17 @@ export const uploadPhoto = async (id, formData) => {
   if (!res) return false;
   return res;
 };
+export const searchUser = async (text) => {
+  console.log(text);
+  const res = await fetch(`${api}/searchUser`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ text }),
+  });
+  if (res.status == 200) {
+    return res;
+  }
+  return false;
+};

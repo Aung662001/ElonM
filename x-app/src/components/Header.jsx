@@ -4,10 +4,12 @@ import {
   DarkMode as DarkModeIcon,
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { NotiCountContext, ThemeContext } from "../ThemedApp";
 import { useNavigate } from "react-router-dom";
+import Search from "../pages/Search";
 import {
   AppBar,
   Box,
@@ -23,6 +25,7 @@ export default function Header({ toggleDrawer }) {
   const mainPages = ["/", "/login", "/register"];
   const navigate = useNavigate();
   const { mode, setMode } = useContext(ThemeContext);
+  const [openSearch, setOpenSearch] = useState(false);
   // const [showMenu, setShowMenu] = useState(false);
   // const { setAuth, setAuthUser, auth } = useContext(AuthContext);
   const { notiCount } = useContext(NotiCountContext);
@@ -61,7 +64,9 @@ export default function Header({ toggleDrawer }) {
               flexGrow: 1,
             }}
           ></Box>
-
+          <IconButton onClick={() => setOpenSearch(true)}>
+            <PersonSearchIcon />
+          </IconButton>
           {mode === "dark" ? (
             <IconButton onClick={() => setMode("light")}>
               <LightModeIcon />
@@ -113,6 +118,7 @@ export default function Header({ toggleDrawer }) {
           </Menu> */}
         </Toolbar>
       </AppBar>
+      <Search open={openSearch} setOpen={setOpenSearch} />
     </Box>
   );
 }

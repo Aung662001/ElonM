@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const { MongoClient, ObjectId } = require("mongodb");
 
-const mongo = new MongoClient("mongodb://localhost");
+const mongo = new MongoClient(process.env.DATABASE_URL);
 const db = mongo.db("x");
 
 const number_of_users = 80;
