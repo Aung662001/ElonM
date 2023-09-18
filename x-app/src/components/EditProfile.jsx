@@ -35,21 +35,26 @@ const EditProfile = ({ open, setOpen }) => {
   };
   const onFileSelected = (file) => {
     setCover(file);
-    const formData = new FormData();
-    formData.append("cover", file);
-    uploadCover(authUser._id, formData);
-    fetchProfile(authUser.handle);
   };
   const onPhotoSelected = (file) => {
     setPhoto(file);
-    const formData = new FormData();
-    formData.append("photo", file);
-    uploadPhoto(authUser._id, formData);
-    fetchProfile(authUser.handle);
   };
 
   const editConfirm = async () => {
     if (!name & !handle) {
+      if (cover.path) {
+        const formData = new FormData();
+        formData.append("cover", cover);
+        await uploadCover(authUser._id, formData);
+      }
+      if (photo.path) {
+        const formData = new FormData();
+        formData.append("photo", photo);
+        await uploadPhoto(authUser._id, formData);
+      }
+      await setOpen(false);
+      alert("Profile Updated");
+      navigate("../");
       return;
     }
     const res = await editNameAndHandle(name, handle);

@@ -68,11 +68,21 @@ export default function Header({ toggleDrawer }) {
             <PersonSearchIcon />
           </IconButton>
           {mode === "dark" ? (
-            <IconButton onClick={() => setMode("light")}>
+            <IconButton
+              onClick={() => {
+                localStorage.setItem("xclone-theme", "light");
+                setMode("light");
+              }}
+            >
               <LightModeIcon />
             </IconButton>
           ) : (
-            <IconButton onClick={() => setMode("dark")}>
+            <IconButton
+              onClick={() => {
+                localStorage.setItem("xclone-theme", "dark");
+                setMode("dark");
+              }}
+            >
               <DarkModeIcon />
             </IconButton>
           )}

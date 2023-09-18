@@ -15,7 +15,9 @@ wsc.onopen = () => {
 };
 export default function ThemedApp() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState("dark");
+  const [mode, setMode] = useState(
+    localStorage.getItem("xclone-theme") || "dark"
+  );
   const [auth, setAuth] = useState(false);
   const [authUser, setAuthUser] = useState({});
   const [posts, setPosts] = useState([]);

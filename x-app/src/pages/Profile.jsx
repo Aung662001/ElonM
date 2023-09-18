@@ -175,7 +175,11 @@ export default function Profile() {
             )}
           </Box>
           {/* Edit profile model */}
-          <EditProfile open={openEditPf} setOpen={setOpenEditPf} />
+          <EditProfile
+            open={openEditPf}
+            setOpen={setOpenEditPf}
+            setLoading={setLoading}
+          />
           {posts?.map((post) => {
             return <Post post={post} key={post._id} LikeClick={LikeClick} />;
           })}

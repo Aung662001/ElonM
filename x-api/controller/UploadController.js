@@ -6,7 +6,7 @@ const xusers = db.collection("users");
 const uploadCover = async (req, res) => {
   const fileName = req.file?.filename;
   const { id } = req.params;
-  if (!id || !fileName) return;
+  if (!id || !fileName) return res.sendStatus(400);
 
   try {
     const user = await xusers.findOne({ _id: new ObjectId(id) });
